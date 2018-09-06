@@ -1,0 +1,29 @@
+Package: tRNAdbImport
+Title: What the Package Does (one line, title case)
+Version: 0.0.0.9000
+Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 3.5.1),
+    GenomicRanges
+Imports:
+    Biostrings,
+    tRNAscanImport,
+    stringr,
+    xml2,
+    S4Vectors,
+    assertive,
+    methods,
+    httr
+Suggests:
+    knitr,
+    rmarkdown
+Collate:
+    'tRNAdbImport.R'
+    'tRNAdbImport-import.R'
+    'tRNAdbImport-utils.R'
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
