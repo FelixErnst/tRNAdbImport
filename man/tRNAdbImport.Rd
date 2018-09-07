@@ -17,7 +17,9 @@ TRNA_DB_URL_MT
 title
 }
 \references{
-
+Jühling F, Mörl M, Hartmann RK, Sprinzl M, Stadler PF, Pütz J. 2009. "tRNAdb 
+2009: compilation of tRNA sequences and tRNA genes." Nucleic Acids Research, 
+Volume 37 (suppl_1): D159–162. doi:10.1093/nar/gkn772.
 }
 \author{
 Felix G M Ernst [aut]

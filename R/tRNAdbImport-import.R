@@ -13,8 +13,10 @@ NULL
 #' @param taxonomyID organism and strain information as a taxonom ID
 #' @param aminoacids a character vector of amino acids as a three letter code 
 #' @param anticodons a character vector of anticodon sequences 
-#' @param sequences 
-#' @param structures 
+#' @param sequences a named (1-15) list of sequences, which are used for the
+#' search
+#' @param structures a named (1-15) list of structures, which are used for the
+#' search. Please use the \code{\(\)} or \code{><} dot bracket annotation.
 #' @param reference a reference as a character string
 #' @param comment a comment as a character string
 #' @param pubmed a pubmed ID
@@ -35,12 +37,13 @@ NULL
 #' @export
 #'
 #' @examples
-#' donttest{
+#' \donttest{
 #' import.tRNAdb(organism = "Saccharomyces cerevisiae",
 #'               aminoacids = c("Phe","Ala"),
 #'               anticodons = c("GAA"))
 #' import.tRNAdb.id(tdbID = "tdbD00000785")
-#' import.tRNAdb.blast(blastSeq = "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
+#' import.tRNAdb.blast(blastSeq = 
+#' "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
 #' }
 NULL
 
@@ -263,6 +266,7 @@ import.mttRNAdb <- function(organism = "",
                  ans
                })
   df <- do.call(rbind,df)
+  browser()
   #
   # get sequence and structure information
   if(verbose){

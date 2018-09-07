@@ -57,9 +57,11 @@ import.mttRNAdb(organism = "", strain = "", taxonomyID = "",
 
 \item{anticodons}{a character vector of anticodon sequences}
 
-\item{sequences}{}
+\item{sequences}{a named (1-15) list of sequences, which are used for the
+search}
 
-\item{structures}{}
+\item{structures}{a named (1-15) list of structures, which are used for the
+search. Please use the \code{\(\)} or \code{><} dot bracket annotation.}
 
 \item{reference}{a reference as a character string}
 
@@ -76,7 +78,7 @@ a GRanges object containing the information from the tRNA db
 title
 }
 \examples{
-donttest{
+\donttest{
 import.tRNAdb(organism = "Saccharomyces cerevisiae",
               aminoacids = c("Phe","Ala"),
               anticodons = c("GAA"))

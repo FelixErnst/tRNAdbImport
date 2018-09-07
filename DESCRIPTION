@@ -1,11 +1,17 @@
 Package: tRNAdbImport
-Title: What the Package Does (one line, title case)
+Title: Importing from to tRNAdb and mitotRNAdb as GRanges
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Authors@R: person("Felix GM", 
+                  "Ernst", 
+                  email = "felix.gm.ernst@outlook.com", 
+                  role = c("aut", "cre"))
 Description: What the package does (one paragraph).
-License: What license is it under?
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
+biocViews:
+    Software,
+    Visualization
 Depends:
     R (>= 3.5.1),
     GenomicRanges
@@ -17,10 +23,13 @@ Imports:
     S4Vectors,
     assertive,
     methods,
-    httr
+    httr,
+    IRanges
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat,
+    BiocStyle
 Collate:
     'tRNAdbImport.R'
     'tRNAdbImport-import.R'

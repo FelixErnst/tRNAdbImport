@@ -1,17 +1,33 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Importing from to tRNAdb and mitotRNAdb as GRanges"
+author: "Felix G.M. Ernst"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+package: tRNAdbImport
+abstract: >
+  Example of importing tRNAdb output as GRanges
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{tRNAdbImport}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: references.bib
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown(css.files = c('custom.css'))
 ```
+
+# Introduction
+
+
+# Session info
+
+```{r}
+sessionInfo()
+```
+
+# References

@@ -7,11 +7,13 @@
 #' title
 #'
 #' @references 
+#' Jühling F, Mörl M, Hartmann RK, Sprinzl M, Stadler PF, Pütz J. 2009. "tRNAdb 
+#' 2009: compilation of tRNA sequences and tRNA genes." Nucleic Acids Research, 
+#' Volume 37 (suppl_1): D159–162. doi:10.1093/nar/gkn772.
 #' 
 #' @docType package
 #' @name tRNAdbImport
 NULL
-
 
 #' @import methods
 #' @import assertive
@@ -21,7 +23,6 @@ NULL
 #' @import tRNAscanImport
 NULL
 requireNamespace("assertive")
-
 
 # constants --------------------------------------------------------------------
 
