@@ -13,7 +13,7 @@ biocViews:
     Software,
     Visualization
 Depends:
-    R (>= 3.5.1),
+    R (>= 3.5),
     GenomicRanges
 Imports:
     Biostrings,
@@ -32,7 +32,10 @@ Suggests:
     BiocStyle
 Collate:
     'tRNAdbImport.R'
+    'AllGenerics.R'
+    'tRNAdbImport-checks.R'
     'tRNAdbImport-import.R'
+    'tRNAdbImport-open.R'
     'tRNAdbImport-utils.R'
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1

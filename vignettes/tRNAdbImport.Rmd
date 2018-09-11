@@ -24,6 +24,31 @@ BiocStyle::markdown(css.files = c('custom.css'))
 # Introduction
 
 
+# Importing as GRanges
+
+```{r}
+library(tRNAdbImport)
+# accessing tRNAdb
+# tRNA from yeast for Alanine and Phenylalanine
+gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
+              aminoacids = c("Phe","Ala"))
+# get a Phenylalanine tRNA from yeast
+gr <- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == "Phe",][1]$tRNA_dbID)
+# find the same tRNA via blast
+gr <- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)
+
+# accessing mtRNAdb
+# get the mitochrondrial tRNA for Alanine in Bos taurus
+gr <- import.mttRNAdb(organism = "Bos taurus", 
+                      aminoacids = "Ala")
+# get one mitochrondrial tRNA in Bos taurus. 
+gr <- import.mttRNAdb.id(mtdbID = gr[1]$tRNA_dbID)
+
+# check that the result has the appropriate columns
+istRNAdbGRanges(gr)
+```
+
+
 # Session info
 
 ```{r}

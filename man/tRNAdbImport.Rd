@@ -4,15 +4,7 @@
 \name{tRNAdbImport}
 \alias{tRNAdbImport}
 \alias{tRNAdbImport-package}
-\alias{TRNA_DB_URL}
-\alias{TRNA_DB_URL_MT}
 \title{tRNAdbImport: Importing from to tRNAdb and mitotRNAdb as GRanges}
-\format{An object of class \code{character} of length 1.}
-\usage{
-TRNA_DB_URL
-
-TRNA_DB_URL_MT
-}
 \description{
 title
 }
@@ -24,4 +16,3 @@ Volume 37 (suppl_1): D159–162. doi:10.1093/nar/gkn772.
 \author{
 Felix G M Ernst [aut]
 }
-\keyword{datasets}

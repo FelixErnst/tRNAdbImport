@@ -1,12 +1,6 @@
 #' @include tRNAdbImport.R
 NULL
 
-# assemble URL for accessing tRNA db
-.trnadb_url <- function(url, path = "") {
-  url <- httr::modify_url(url, path = path)
-  return(url)
-}
-
 #input type checks
 .checkValueValidity <- function(value,
                                 checkValues,

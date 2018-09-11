@@ -2,6 +2,8 @@
 NULL
 
 #' @name import.tRNAdb
+#' @aliases import.tRNAdb import.mttRNAdb import.tRNAdb.id import.mttRNAdb.id
+#' import.tRNAdb.blast import.mttRNAdb.blast
 #' 
 #' @title Importing information from the tRNA db as GRanges object
 #' 
@@ -22,9 +24,10 @@ NULL
 #' @param pubmed a pubmed ID
 #' @param genes a gene name as a character string
 #' @param tdbID a tRNAdb ID 
+#' @param mtdbID a mtRNAdb ID 
 #' @param blastSeq a sequence to use for a blast search
 #' @param database "RNA" or "DNA"
-#' @param origin "plastid", "mitochondrial" or "allothers"
+#' @param origin one ore more of "plastid", "mitochondrial" or "allothers"
 #' @param dbURL the URL of the tRNA db
 #' @param verbose whether to report verbose information from the httr calls
 #'
@@ -44,8 +47,16 @@ NULL
 #' import.tRNAdb.id(tdbID = "tdbD00000785")
 #' import.tRNAdb.blast(blastSeq = 
 #' "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
+#' import.mttRNAdb(organism = "Bos taurus")
 #' }
 NULL
+
+#' @rdname import.tRNAdb
+#' @export
+TRNA_DB_URL <- "http://trna.bioinf.uni-leipzig.de/"
+#' @rdname import.tRNAdb
+#' @export
+TRNA_DB_URL_MT <- "http://mttrna.bioinf.uni-leipzig.de/mt"
 
 #' @rdname import.tRNAdb
 #' @export
@@ -58,7 +69,7 @@ import.tRNAdb.id <- function(tdbID,
   assertive::assert_is_a_bool(verbose)
   assertive::assert_all_are_non_empty_character(tdbID)
   .checkValueValidity(database, TRNA_DB_TYPE)
-  .checkValueValidity(origin, names(TRNA_DB_ORIGIN))
+  .checkValueValidity(origin, c(names(TRNA_DB_ORIGIN),NA))
   # assemble arguments
   args <- .assemble_args_for_tRNA_db_search(tdbID = tdbID,
                                             database = database,
@@ -73,14 +84,12 @@ import.tRNAdb.id <- function(tdbID,
 }
 #' @rdname import.tRNAdb
 #' @export
-import.mttRNAdb.id <- function(tdbID,
-                               database = "DNA",
-                               origin = "allothers",
+import.mttRNAdb.id <- function(mtdbID,
                                dbURL = TRNA_DB_URL_MT,
                                verbose = FALSE){
-  import.tRNAdb.id(tdbID = tdbID,
-                   database = database,
-                   origin = origin,
+  import.tRNAdb.id(tdbID = mtdbID,
+                   database = NA,
+                   origin = NA,
                    dbURL = dbURL,
                    verbose = verbose)
 }
@@ -94,9 +103,10 @@ import.tRNAdb.blast <- function(blastSeq,
                                 verbose = FALSE){
   # input check
   assertive::assert_is_a_bool(verbose)
-  assertive::assert_all_are_non_empty_character(blastSeq)
+  blastSeq <- as.character(blastSeq) # in case it is a single DNAString*
+  assertive::assert_is_a_non_empty_string(blastSeq)
   .checkValueValidity(database, TRNA_DB_TYPE)
-  .checkValueValidity(origin, names(TRNA_DB_ORIGIN))
+  .checkValueValidity(origin, c(names(TRNA_DB_ORIGIN),NA))
   # assemble arguments
   args <- .assemble_args_for_tRNA_db_search(blastSequence = blastSeq,
                                             database = database,
@@ -113,19 +123,17 @@ import.tRNAdb.blast <- function(blastSeq,
                              verbose = verbose)
   return(.convert_tRNAdb_result_to_GRanges(res))
 }
-#' @rdname import.tRNAdb
-#' @export
-import.mttRNAdb.blast <- function(blastSeq,
-                                  database = "DNA",
-                                  origin = "allothers",
-                                  dbURL = TRNA_DB_URL_MT,
-                                  verbose = FALSE){
-  import.tRNAdb.blast(blastSeq = blastSeq,
-                      database = database,
-                      origin = origin,
-                      dbURL = dbURL,
-                      verbose = verbose)
-}
+# #' @rdname import.tRNAdb
+# #' @export
+# import.mttRNAdb.blast <- function(blastSeq,
+#                                   dbURL = TRNA_DB_URL_MT,
+#                                   verbose = FALSE){
+#   import.tRNAdb.blast(blastSeq = blastSeq,
+#                       database = NA,
+#                       origin = NA,
+#                       dbURL = dbURL,
+#                       verbose = verbose)
+# }
 
 #' @rdname import.tRNAdb
 #' @export
@@ -154,7 +162,7 @@ import.tRNAdb <- function(organism = "",
   .checkValueValidity(anticodons, c(names(Biostrings::GENETIC_CODE),
                                     ""))
   .checkValueValidity(database, TRNA_DB_TYPE)
-  .checkValueValidity(origin, names(TRNA_DB_ORIGIN))
+  .checkValueValidity(origin, c(names(TRNA_DB_ORIGIN),NA))
   # assemble arguments
   args <- .assemble_args_for_tRNA_db_search(organism = organism,
                                             strain = strain,
@@ -190,8 +198,6 @@ import.mttRNAdb <- function(organism = "",
                             comment = "",
                             pubmed = "",
                             genes = "",
-                            database = "DNA",
-                            origin = "allothers",
                             dbURL = TRNA_DB_URL_MT,
                             verbose = FALSE){
   import.tRNAdb(organism = organism,
@@ -205,8 +211,8 @@ import.mttRNAdb <- function(organism = "",
                 comment = comment,
                 pubmed = pubmed,
                 genes = genes,
-                database = database,
-                origin = origin,
+                database = NA,
+                origin = NA,
                 dbURL = dbURL,
                 verbose = verbose)
 }
@@ -219,8 +225,14 @@ import.mttRNAdb <- function(organism = "",
     ranges = IRanges::IRanges(start = rep(1,nrow(df)),
                               end = nchar(df$tRNA_seq)),
     strand = "*",
-    df[,colnames(df)[!(colnames(df) %in% c("tRNA_dbID"))]])
-  gr$tRNA_seq <- Biostrings::DNAStringSet(gr$tRNA_seq)
+    df)
+  if(all(df$tRNA_db != "RNA")){
+    gr$tRNA_seq <- Biostrings::DNAStringSet(gr$tRNA_seq)
+  } else {
+    warning("The result potentially contains modified DNA and RNA nucleotides.",
+            "\nDownstream analysis might be limited.",
+            call. = FALSE)
+  }
   gr
 }
 
@@ -230,17 +242,21 @@ import.mttRNAdb <- function(organism = "",
                                 verbose){
   # get main result and establish session
   if(verbose){
-    res <- httr::POST(.trnadb_url(dbURL,paste0("DataOutput/",dbFunction)),
+    res <- httr::POST(paste0(httr::modify_url(dbURL),
+                             "DataOutput/",
+                             dbFunction),
                       body = args,
                       encode = "form",
                       httr::verbose())
   } else {
-    res <- httr::POST(.trnadb_url(dbURL,paste0("DataOutput/",dbFunction)),
+    res <- httr::POST(paste0(httr::modify_url(dbURL),
+                             "DataOutput/",
+                             dbFunction),
                       body = args,
                       encode = "form")
   }
   # output blast results if BLAST search
-  if(dbFunction == "Blast"){
+  if(dbFunction == "Blast" && verbose){
     message(xml_text(xml2::xml_find_all(content(res), './/tt')))
   }
   # check result length
@@ -253,37 +269,43 @@ import.mttRNAdb <- function(organism = "",
   df <- lapply(pageNumbers,
                function(i){
                  if(verbose){
-                   page <- httr::POST(.trnadb_url(dbURL,"DataOutput/Result"),
+                   page <- httr::POST(paste0(httr::modify_url(dbURL),
+                                             "DataOutput/Result"),
                                       body = list(position = i),
                                       encode = "form",
                                       httr::verbose())
                  } else {
-                   page <- httr::POST(.trnadb_url(dbURL,"DataOutput/Result"),
+                   page <- httr::POST(paste0(httr::modify_url(dbURL),
+                                             "DataOutput/Result"),
                                       body = list(position = i),
                                       encode = "form")
                  }
-                 ans <- .extract_data_frame_from_xml_per_page(httr::content(page))
+                 ans <- 
+                   .extract_data_frame_from_xml_per_page(httr::content(page))
                  ans
                })
   df <- do.call(rbind,df)
-  browser()
-  #
+  df <- df[order(df$tRNA_dbID),]
   # get sequence and structure information
   if(verbose){
-    seqs <- httr::POST(.trnadb_url(dbURL,"DataOutput/Tools"),
+    seqs <- httr::POST(paste0(httr::modify_url(dbURL),
+                              "DataOutput/Tools"),
                        body = list("allnormalchecked" = "on",
                                    "function" = "fastastruct",
                                    "sel" = ""),
                        encode = "form",
                        httr::verbose())
   } else {
-    seqs <- httr::POST(.trnadb_url(dbURL,"DataOutput/Tools"),
+    seqs <- httr::POST(paste0(httr::modify_url(dbURL),
+                              "DataOutput/Tools"),
                        body = list("allnormalchecked" = "on",
                                    "function" = "fastastruct",
                                    "sel" = ""),
                        encode = "form")
   }
-  seqs <- .extract_sequences_and_structures(httr::content(seqs))
+  seqs <- .extract_sequences_and_structures(httr::content(seqs),
+                                            df)
+  seqs <- seqs[order(seqs$tRNA_dbID),]
   # make sure results match
   if(!all(seqs$tRNA_dbID == df$tRNA_dbID)){
     stop("Function 'fastastruct' returned unmatching list of tRNAdb entries.",
@@ -307,8 +329,7 @@ import.mttRNAdb <- function(organism = "",
   df$no <- 1:nrow(df)
   df$tRNA_length <- nchar(df$tRNA_seq)
   # order columns
-  colOrder <- c("tRNA_dbID",
-                "no",
+  colOrder <- c("no",
                 "tRNA_length",
                 "tRNA_type",
                 "tRNA_anticodon",
@@ -316,6 +337,7 @@ import.mttRNAdb <- function(organism = "",
                 "tRNA_str",
                 "tRNA_CCA.end",
                 "tRNA_db",
+                "tRNA_dbID",
                 "tRNA_organism",
                 "tRNA_strain",
                 "tRNA_taxonomyID",
@@ -333,6 +355,9 @@ import.mttRNAdb <- function(organism = "",
 .extract_data_frame_from_xml_per_page <- function(xml){
   ids <- xml2::xml_attr(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//input[@type="checkbox"][@name="selection"]'),"value")
   dbType <- xml2::xml_attr(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//td[2]'),"class")
+  if(any(dbType == "GRAY")){
+    dbType[dbType == "GRAY"] <- "mt"
+  }
   aminoacid <- as.character(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//span[@class="aminoacid"]/text()'))
   organism <- as.character(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//td[3]//span[@class="middle"]//a/text()'))
   organism <- lapply(stringr::str_split(organism,","),"[",1)
@@ -362,7 +387,8 @@ import.mttRNAdb <- function(organism = "",
   ans
 }
 
-.extract_sequences_and_structures <- function(input){
+.extract_sequences_and_structures <- function(input,
+                                              df){
   input <- stringr::str_split(input,"\n")[[1]]
   input <- split(input[1:(length(input)-1)],
                 rep(c(1,2,3),(length(input)-1)/3))
@@ -387,13 +413,12 @@ import.mttRNAdb <- function(organism = "",
                      character(1))
   seq <- input[[2]]
   str <- gsub("\\(",">",gsub("\\)","<",input[[3]]))
-  if(any(stringr::str_detect(seq,"_"))){
+  if(any(stringr::str_detect(seq,"_") & df$tRNA_db != "RNA")){
     warning("Unknown character \"_\" detected in the tRNA sequences. They ",
             "will be removed.",
             call. = FALSE)
     pos <- stringr::str_locate_all(seq,"_")
     f <- vapply(pos, function(p){nrow(p) > 0},logical(1))
-    browser()
     seq[f] <- unlist(mapply(
       function(s,p){
         p2 <- c(0,as.numeric(as.character(p)),nchar(s)+1)
@@ -431,6 +456,21 @@ import.mttRNAdb <- function(organism = "",
          paste(str[vapply(seq,nchar,double(1)) != vapply(str,nchar,double(1))],
                collapse = "\n"))
   }
+  # since apparently not all dot bracket annotations are valid, we have to 
+  # catch them
+  tryCatch({
+    cca <- .has_CCA_end(str)
+  },
+  error = function(e){
+    stop("Result from the tRNAdb contain invalid dot bracket annotation.\n",
+         e,
+         "\ntRNAdb ids: '",
+         paste(ids[as.numeric(gsub("'","",stringr::str_extract(e,"'[0-9]++'")))],
+               collapse = "', '"),
+         "'",
+         call. = FALSE)
+  })
+  # create result as data.frame
   ans <- data.frame(tRNA_dbID = ids,
                     tRNA_type = aminoacid,
                     tRNA_anticodon = anticodon,
@@ -439,13 +479,13 @@ import.mttRNAdb <- function(organism = "",
                     tRNA_taxonomyID = taxonomyID,
                     tRNA_seq = seq,
                     tRNA_str = str,
-                    tRNA_CCA.end = .has_CCA_end(str),
+                    tRNA_CCA.end = cca,
                     stringsAsFactors = FALSE)
   ans
 }
 
 .has_CCA_end <- function(structures){
-  strList <- tRNAscanImport::getBasePairing(structures)
+  strList <- tRNA::getBasePairing(structures)
   vapply(strList,
          function(str){
            end <- max(str$pos)
@@ -471,8 +511,14 @@ import.mttRNAdb <- function(organism = "",
                                               origin){
   # base values
   args <- list(search = 0)
-  args[[TRNA_DB_ORIGIN[names(TRNA_DB_ORIGIN) == origin]]] <- "on"
-  args[["database"]] <- database
+  #
+  if(!missing(origin) && !is.na(origin) && origin != ""){
+    args[TRNA_DB_ORIGIN[names(TRNA_DB_ORIGIN) %in% origin]] <- "on"
+  }
+  #
+  if(!missing(database) && !is.na(database) && database != ""){
+    args[["database"]] <- database
+  }
   #
   if(!missing(organism) && !is.na(organism) && organism != ""){
     args[["org"]] <- organism
@@ -520,4 +566,3 @@ import.mttRNAdb <- function(organism = "",
   #
   args
 }
-

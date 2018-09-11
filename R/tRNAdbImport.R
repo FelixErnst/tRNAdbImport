@@ -20,23 +20,26 @@ NULL
 #' @import httr
 #' @import xml2
 #' @import GenomicRanges
-#' @import tRNAscanImport
+#' @import tRNA
 NULL
 requireNamespace("assertive")
 
 # constants --------------------------------------------------------------------
 
-#' @rdname tRNAdbImport
-#' @export
-TRNA_DB_URL <- "http://trna.bioinf.uni-leipzig.de"
-#' @rdname tRNAdbImport
-#' @export
-TRNA_DB_URL_MT <- "http://mttrna.bioinf.uni-leipzig.de/mt"
-
 TRNA_DB_VERIFIED <- c("verified sequence" = TRUE,
                       "unverified sequence" = FALSE,
                       "not verifiable sequence" = NA)
-TRNA_DB_TYPE <- c("RNA","DNA")
+TRNA_DB_TYPE <- c("RNA","DNA",NA)
 TRNA_DB_ORIGIN <- c("plastid" = "chloro",
                     "mitochondrial" = "mito",
                     "allothers" = "allothers")
+
+TRNADB_FEATURES <- c(
+  tRNA:::TRNA_FEATURES,
+  "tRNA_dbID",
+  "tRNA_db",
+  "tRNA_organism",
+  "tRNA_strain",
+  "tRNA_taxonomyID",
+  "tRNA_verified"
+)
