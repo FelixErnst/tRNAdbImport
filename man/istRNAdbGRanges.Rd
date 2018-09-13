@@ -5,7 +5,7 @@
 \alias{istRNAdbGRanges}
 \alias{istRNAdbGRanges}
 \alias{istRNAdbGRanges,GRanges-method}
-\title{tRNAscan compatibility check}
+\title{tRNAdb compatibility check}
 \usage{
 istRNAdbGRanges(gr)
 
@@ -19,7 +19,7 @@ a logical value
 }
 \description{
 \code{istRNAdbGRanges} checks whether a GRanges object contains the 
-information expected for a tRNAscan result.
+information expected for a tRNAdb result.
 }
 \examples{
 \donttest{

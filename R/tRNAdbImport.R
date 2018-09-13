@@ -4,8 +4,20 @@
 #' @author Felix G M Ernst [aut]
 #' 
 #' @description
-#' title
+#' The tRNAdb and mttRNAdb (Jühling et al. 2009) is a compilation of tRNA 
+#' sequences and tRNA genes. It is a follow up version of the database of 
+#' Sprinzl et al. 2005.
+#' 
+#' Using `tRNAdbImport` the tRNAdb can be accessed as outlined on the website 
+#' [http://trna.bioinf.uni-leipzig.de/](http://trna.bioinf.uni-leipzig.de/) and 
+#' the results are returned as a `GRanges` object.
 #'
+#' @section Manual:
+#' Please refer to the tRNAdbImport vignette for an example how to work and 
+#' use the package: \href{../doc/tRNAdbImport.html}{tRNAdbImport} 
+#' 
+#' @seealso [import.tRNAdb()] for examples
+#' 
 #' @references 
 #' Jühling F, Mörl M, Hartmann RK, Sprinzl M, Stadler PF, Pütz J. 2009. "tRNAdb 
 #' 2009: compilation of tRNA sequences and tRNA genes." Nucleic Acids Research, 
@@ -43,3 +55,10 @@ TRNADB_FEATURES <- c(
   "tRNA_taxonomyID",
   "tRNA_verified"
 )
+
+#' @rdname import.tRNAdb
+#' @export
+TRNA_DB_URL <- "http://trna.bioinf.uni-leipzig.de/"
+#' @rdname import.tRNAdb
+#' @export
+TRNA_DB_URL_MT <- "http://mttrna.bioinf.uni-leipzig.de/mt"

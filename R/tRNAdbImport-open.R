@@ -8,7 +8,8 @@ NULL
 #' 
 #' @description 
 #' \code{open.tdbID} is a wrapper for \code{browseURL} and opens a tab for a
-#' tRNAdb entry in a browser.
+#' tRNAdb entry in a browser. Please note, that the tRNAdb server does not show
+#' the entry right away without a session ID. open twice upon first use.
 #'
 #' @param tdbID a tRNA db
 #' @param mtdbID a mtRNA db

@@ -13,11 +13,14 @@ open_mtdbID(mtdbID, dbURL = TRNA_DB_URL_MT)
 \arguments{
 \item{tdbID}{a tRNA db}
 
+\item{dbURL}{the URL for the tRNAdb}
+
 \item{mtdbID}{a mtRNA db}
 }
 \description{
 \code{open.tdbID} is a wrapper for \code{browseURL} and opens a tab for a
-tRNAdb entry in a browser.
+tRNAdb entry in a browser. Please note, that the tRNAdb server does not show
+the entry right away without a session ID. open twice upon first use.
 }
 \examples{
 \donttest{
