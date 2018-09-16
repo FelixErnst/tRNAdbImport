@@ -14,10 +14,10 @@ biocViews:
     Visualization
 Depends:
     R (>= 3.5),
-    GenomicRanges
+    GenomicRanges,
+    tRNA
 Imports:
     Biostrings,
-    tRNA,
     stringr,
     xml2,
     S4Vectors,

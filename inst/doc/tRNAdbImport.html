@@ -11,7 +11,7 @@
 
 <meta name="author" content="Felix G.M. Ernst" />
 
-<meta name="date" content="2018-09-13" />
+<meta name="date" content="2018-09-16" />
 
 <title>Importing from to tRNAdb and mitotRNAdb as GRanges</title>
 
@@ -227,11 +227,11 @@ div.tocify {
 
 <h1 class="title toc-ignore">Importing from to tRNAdb and mitotRNAdb as GRanges</h1>
 <p class="author-name">Felix G.M. Ernst</p>
-<h4 class="date"><em>2018-09-13</em></h4>
+<h4 class="date"><em>2018-09-16</em></h4>
 <h4 class="abstract">Abstract</h4>
 <p>Example of importing tRNAdb output as GRanges</p>
 <h4 class="package">Package</h4>
-<p>tRNAdbImport 0.0.0.9000</p>
+<p>tRNAdbImport 0.99.1</p>
 
 </div>
 
@@ -278,224 +278,8 @@ gr &lt;- import.mttRNAdb.id(mtdbID = gr[1]$tRNA_dbID)
 istRNAdbGRanges(gr)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 </div>
-<div id="subsetting-trnas" class="section level1">
-<h1><span class="header-section-number">3</span> Subsetting tRNAs</h1>
-<p>The results can be interogated and subset further on specific tRNA features using the functions of the <code>tRNA</code> package. Here is an example:</p>
-<pre class="r"><code>library(tRNA)
-gr &lt;- import.tRNAdb(organism = &quot;Saccharomyces cerevisiae&quot;)
-gr[hasAcceptorStem(gr, unpaired = TRUE)]</code></pre>
-<pre><code>## GRanges object with 28 ranges and 13 metadata columns:
-##            seqnames    ranges strand |        no tRNA_length   tRNA_type
-##               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
-##    [1] tdbD00000218      1-73      * |         1          73         Ala
-##    [2] tdbD00000219      1-73      * |         2          73         Ala
-##    [3] tdbD00000645      1-72      * |         7          72         Glu
-##    [4] tdbD00000646      1-72      * |         8          72         Glu
-##    [5] tdbD00001321      1-73      * |        17          73         Ile
-##    ...          ...       ...    ... .       ...         ...         ...
-##   [24] tdbD00008253      1-72      * |        95          72         Pro
-##   [25] tdbD00008254      1-72      * |        96          72         Pro
-##   [26] tdbD00009889      1-82      * |       109          82         Ser
-##   [27] tdbD00010515      1-72      * |       113          72         Thr
-##   [28] tdbD00010516      1-72      * |       114          72         Thr
-##        tRNA_anticodon                tRNA_seq
-##           &lt;character&gt;          &lt;DNAStringSet&gt;
-##    [1]            TGC GGGCACATGG...GTTGCGTCCA
-##    [2]            AGC GGGCGTGTGG...GACTCGTCCA
-##    [3]            CTC TCCGATGTAG...CGCTTCGGAG
-##    [4]            TTC TCCGATATAG...CGTAGCGGAG
-##    [5]            TAT GCTCGTGTAG...ACCTCGAGCA
-##    ...            ...                     ...
-##   [24]            TGG GGGCGTGTGG...AGCTCGCCCC
-##   [25]            TGG GGGCGTGTGG...AGCTCGCCCC
-##   [26]            GCT GTCCCAGTGG...GTCTGTGACG
-##   [27]            TGT GCCTCCTTAG...ACAGGTGGCA
-##   [28]            TGT GCCTCCTTAG...GCAGGTGGCA
-##                                                                                  tRNA_str
-##                                                                               &lt;character&gt;
-##    [1]          &gt;&gt;&gt;&gt;.&gt;&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;.
-##    [2]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    [3]           &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    [4]           &gt;&gt;&gt;&gt;.&gt;&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;.
-##    [5]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    ...                                                                                ...
-##   [24]           &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;.........&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##   [25]           &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;.........&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##   [26] &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.............&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;.
-##   [27]           &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;.
-##   [28]           &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;.
-##        tRNA_CCA.end     tRNA_db    tRNA_dbID            tRNA_organism
-##           &lt;logical&gt; &lt;character&gt;  &lt;character&gt;              &lt;character&gt;
-##    [1]        FALSE         DNA tdbD00000218 Saccharomyces cerevisiae
-##    [2]        FALSE         DNA tdbD00000219 Saccharomyces cerevisiae
-##    [3]        FALSE         DNA tdbD00000645 Saccharomyces cerevisiae
-##    [4]        FALSE         DNA tdbD00000646 Saccharomyces cerevisiae
-##    [5]        FALSE         DNA tdbD00001321 Saccharomyces cerevisiae
-##    ...          ...         ...          ...                      ...
-##   [24]        FALSE         DNA tdbD00008253 Saccharomyces cerevisiae
-##   [25]        FALSE         DNA tdbD00008254 Saccharomyces cerevisiae
-##   [26]        FALSE         DNA tdbD00009889 Saccharomyces cerevisiae
-##   [27]        FALSE         DNA tdbD00010515 Saccharomyces cerevisiae
-##   [28]        FALSE         DNA tdbD00010516 Saccharomyces cerevisiae
-##        tRNA_strain tRNA_taxonomyID tRNA_verified
-##        &lt;character&gt;     &lt;character&gt;     &lt;logical&gt;
-##    [1]                        4932         FALSE
-##    [2]                        4932         FALSE
-##    [3]                        4932         FALSE
-##    [4]                        4932         FALSE
-##    [5]                        4932         FALSE
-##    ...         ...             ...           ...
-##   [24]                        4932         FALSE
-##   [25]                        4932         FALSE
-##   [26]                        4932         FALSE
-##   [27]                        4932         FALSE
-##   [28]                        4932         FALSE
-##   -------
-##   seqinfo: 121 sequences from an unspecified genome; no seqlengths</code></pre>
-<pre class="r"><code># mismatches and bulged are subsets of unpaired
-gr[hasAcceptorStem(gr, mismatches = TRUE)]</code></pre>
-<pre><code>## GRanges object with 28 ranges and 13 metadata columns:
-##            seqnames    ranges strand |        no tRNA_length   tRNA_type
-##               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
-##    [1] tdbD00000218      1-73      * |         1          73         Ala
-##    [2] tdbD00000219      1-73      * |         2          73         Ala
-##    [3] tdbD00000645      1-72      * |         7          72         Glu
-##    [4] tdbD00000646      1-72      * |         8          72         Glu
-##    [5] tdbD00001321      1-73      * |        17          73         Ile
-##    ...          ...       ...    ... .       ...         ...         ...
-##   [24] tdbD00008253      1-72      * |        95          72         Pro
-##   [25] tdbD00008254      1-72      * |        96          72         Pro
-##   [26] tdbD00009889      1-82      * |       109          82         Ser
-##   [27] tdbD00010515      1-72      * |       113          72         Thr
-##   [28] tdbD00010516      1-72      * |       114          72         Thr
-##        tRNA_anticodon                tRNA_seq
-##           &lt;character&gt;          &lt;DNAStringSet&gt;
-##    [1]            TGC GGGCACATGG...GTTGCGTCCA
-##    [2]            AGC GGGCGTGTGG...GACTCGTCCA
-##    [3]            CTC TCCGATGTAG...CGCTTCGGAG
-##    [4]            TTC TCCGATATAG...CGTAGCGGAG
-##    [5]            TAT GCTCGTGTAG...ACCTCGAGCA
-##    ...            ...                     ...
-##   [24]            TGG GGGCGTGTGG...AGCTCGCCCC
-##   [25]            TGG GGGCGTGTGG...AGCTCGCCCC
-##   [26]            GCT GTCCCAGTGG...GTCTGTGACG
-##   [27]            TGT GCCTCCTTAG...ACAGGTGGCA
-##   [28]            TGT GCCTCCTTAG...GCAGGTGGCA
-##                                                                                  tRNA_str
-##                                                                               &lt;character&gt;
-##    [1]          &gt;&gt;&gt;&gt;.&gt;&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;.
-##    [2]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    [3]           &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    [4]           &gt;&gt;&gt;&gt;.&gt;&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;.
-##    [5]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    ...                                                                                ...
-##   [24]           &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;.........&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##   [25]           &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;.........&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##   [26] &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.............&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;.
-##   [27]           &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;.
-##   [28]           &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;.
-##        tRNA_CCA.end     tRNA_db    tRNA_dbID            tRNA_organism
-##           &lt;logical&gt; &lt;character&gt;  &lt;character&gt;              &lt;character&gt;
-##    [1]        FALSE         DNA tdbD00000218 Saccharomyces cerevisiae
-##    [2]        FALSE         DNA tdbD00000219 Saccharomyces cerevisiae
-##    [3]        FALSE         DNA tdbD00000645 Saccharomyces cerevisiae
-##    [4]        FALSE         DNA tdbD00000646 Saccharomyces cerevisiae
-##    [5]        FALSE         DNA tdbD00001321 Saccharomyces cerevisiae
-##    ...          ...         ...          ...                      ...
-##   [24]        FALSE         DNA tdbD00008253 Saccharomyces cerevisiae
-##   [25]        FALSE         DNA tdbD00008254 Saccharomyces cerevisiae
-##   [26]        FALSE         DNA tdbD00009889 Saccharomyces cerevisiae
-##   [27]        FALSE         DNA tdbD00010515 Saccharomyces cerevisiae
-##   [28]        FALSE         DNA tdbD00010516 Saccharomyces cerevisiae
-##        tRNA_strain tRNA_taxonomyID tRNA_verified
-##        &lt;character&gt;     &lt;character&gt;     &lt;logical&gt;
-##    [1]                        4932         FALSE
-##    [2]                        4932         FALSE
-##    [3]                        4932         FALSE
-##    [4]                        4932         FALSE
-##    [5]                        4932         FALSE
-##    ...         ...             ...           ...
-##   [24]                        4932         FALSE
-##   [25]                        4932         FALSE
-##   [26]                        4932         FALSE
-##   [27]                        4932         FALSE
-##   [28]                        4932         FALSE
-##   -------
-##   seqinfo: 121 sequences from an unspecified genome; no seqlengths</code></pre>
-<pre class="r"><code># combination of different structure parameters
-gr[hasAcceptorStem(gr, mismatches = TRUE) &amp; 
-       hasDloop(gr, length = 8)]</code></pre>
-<pre><code>## GRanges object with 14 ranges and 13 metadata columns:
-##            seqnames    ranges strand |        no tRNA_length   tRNA_type
-##               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
-##    [1] tdbD00000218      1-73      * |         1          73         Ala
-##    [2] tdbD00000219      1-73      * |         2          73         Ala
-##    [3] tdbD00000645      1-72      * |         7          72         Glu
-##    [4] tdbD00000646      1-72      * |         8          72         Glu
-##    [5] tdbD00001321      1-73      * |        17          73         Ile
-##    ...          ...       ...    ... .       ...         ...         ...
-##   [10] tdbD00004721      1-72      * |        58          72         Glu
-##   [11] tdbD00005345      1-71      * |        65          71         Gly
-##   [12] tdbD00005935      1-73      * |        71          73         Ile
-##   [13] tdbD00005936      1-73      * |        72          73         Ile
-##   [14] tdbD00009889      1-82      * |       109          82         Ser
-##        tRNA_anticodon                tRNA_seq
-##           &lt;character&gt;          &lt;DNAStringSet&gt;
-##    [1]            TGC GGGCACATGG...GTTGCGTCCA
-##    [2]            AGC GGGCGTGTGG...GACTCGTCCA
-##    [3]            CTC TCCGATGTAG...CGCTTCGGAG
-##    [4]            TTC TCCGATATAG...CGTAGCGGAG
-##    [5]            TAT GCTCGTGTAG...ACCTCGAGCA
-##    ...            ...                     ...
-##   [10]            TTC TCCGATATAG...CGTAGCGGAG
-##   [11]            CCC GCGAAAGTGG...CGGCTTCCGC
-##   [12]            TAT GCTCGTGTAG...ACCTCGAGCA
-##   [13]            TAT GCTCGTGTAG...ACCTCGAGCA
-##   [14]            GCT GTCCCAGTGG...GTCTGTGACG
-##                                                                                  tRNA_str
-##                                                                               &lt;character&gt;
-##    [1]          &gt;&gt;&gt;&gt;.&gt;&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;.
-##    [2]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    [3]           &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    [4]           &gt;&gt;&gt;&gt;.&gt;&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;.
-##    [5]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##    ...                                                                                ...
-##   [10]           &gt;&gt;&gt;&gt;.&gt;&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;.
-##   [11]            &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;...&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;
-##   [12]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##   [13]          &gt;&gt;&gt;&gt;&gt;.&gt;..&gt;&gt;&gt;&gt;........&lt;&lt;&lt;&lt;.&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;.....&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;&lt;&lt;.
-##   [14] &gt;&gt;&gt;.&gt;&gt;&gt;..&gt;&gt;&gt;..........&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;.............&gt;&gt;&gt;&gt;&gt;.......&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;.&lt;&lt;&lt;.
-##        tRNA_CCA.end     tRNA_db    tRNA_dbID            tRNA_organism
-##           &lt;logical&gt; &lt;character&gt;  &lt;character&gt;              &lt;character&gt;
-##    [1]        FALSE         DNA tdbD00000218 Saccharomyces cerevisiae
-##    [2]        FALSE         DNA tdbD00000219 Saccharomyces cerevisiae
-##    [3]        FALSE         DNA tdbD00000645 Saccharomyces cerevisiae
-##    [4]        FALSE         DNA tdbD00000646 Saccharomyces cerevisiae
-##    [5]        FALSE         DNA tdbD00001321 Saccharomyces cerevisiae
-##    ...          ...         ...          ...                      ...
-##   [10]        FALSE         DNA tdbD00004721 Saccharomyces cerevisiae
-##   [11]        FALSE         DNA tdbD00005345 Saccharomyces cerevisiae
-##   [12]        FALSE         DNA tdbD00005935 Saccharomyces cerevisiae
-##   [13]        FALSE         DNA tdbD00005936 Saccharomyces cerevisiae
-##   [14]        FALSE         DNA tdbD00009889 Saccharomyces cerevisiae
-##        tRNA_strain tRNA_taxonomyID tRNA_verified
-##        &lt;character&gt;     &lt;character&gt;     &lt;logical&gt;
-##    [1]                        4932         FALSE
-##    [2]                        4932         FALSE
-##    [3]                        4932         FALSE
-##    [4]                        4932         FALSE
-##    [5]                        4932         FALSE
-##    ...         ...             ...           ...
-##   [10]                        4932         FALSE
-##   [11]                        4932         FALSE
-##   [12]                        4932         FALSE
-##   [13]                        4932         FALSE
-##   [14]                        4932         FALSE
-##   -------
-##   seqinfo: 121 sequences from an unspecified genome; no seqlengths</code></pre>
-</div>
 <div id="session-info" class="section level1">
-<h1><span class="header-section-number">4</span> Session info</h1>
+<h1><span class="header-section-number">3</span> Session info</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -513,36 +297,35 @@ gr[hasAcceptorStem(gr, mismatches = TRUE) &amp;
 ## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] tRNA_0.0.0.9000         BiocStyle_2.8.2         tRNAdbImport_0.0.0.9000
-## [4] XVector_0.20.0          GenomicRanges_1.32.6    GenomeInfoDb_1.16.0    
-## [7] IRanges_2.14.11         S4Vectors_0.18.3        BiocGenerics_0.26.0    
+## [1] BiocStyle_2.8.2      tRNAdbImport_0.99.1  tRNA_0.0.0.9000     
+## [4] GenomicRanges_1.32.6 GenomeInfoDb_1.16.0  IRanges_2.14.11     
+## [7] S4Vectors_0.18.3     BiocGenerics_0.26.0 
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.12.18               assertive.data_0.0-1      
 ##  [3] BiocInstaller_1.30.0       compiler_3.5.1            
-##  [5] bitops_1.0-6               assertive.files_0.0-2     
-##  [7] assertive.properties_0.0-4 tools_3.5.1               
-##  [9] assertive.data.us_0.0-1    zlibbioc_1.26.0           
-## [11] digest_0.6.16              memoise_1.1.0             
-## [13] evaluate_0.11              assertive_0.3-5           
-## [15] assertive.base_0.0-7       lattice_0.20-35           
-## [17] Matrix_1.2-14              curl_3.2                  
-## [19] yaml_2.2.0                 xfun_0.3                  
-## [21] GenomeInfoDbData_1.1.0     withr_2.1.2               
-## [23] httr_1.3.1                 stringr_1.3.1             
-## [25] knitr_1.20                 xml2_1.2.0                
-## [27] devtools_1.13.6            assertive.strings_0.0-3   
-## [29] Biostrings_2.48.0          assertive.types_0.0-3     
-## [31] assertive.datetimes_0.0-2  assertive.sets_0.0-3      
-## [33] assertive.matrices_0.0-1   rprojroot_1.3-2           
-## [35] grid_3.5.1                 assertive.code_0.0-1      
-## [37] R6_2.2.2                   bookdown_0.7              
-## [39] rmarkdown_1.10             magrittr_1.5              
-## [41] backports_1.1.2            htmltools_0.3.6           
-## [43] assertive.numbers_0.0-2    codetools_0.2-15          
-## [45] assertive.models_0.0-1     stringi_1.1.7             
-## [47] assertive.data.uk_0.0-1    RCurl_1.95-4.11           
-## [49] assertive.reflection_0.0-4</code></pre>
+##  [5] XVector_0.20.0             bitops_1.0-6              
+##  [7] assertive.files_0.0-2      assertive.properties_0.0-4
+##  [9] tools_3.5.1                assertive.data.us_0.0-1   
+## [11] zlibbioc_1.26.0            digest_0.6.16             
+## [13] memoise_1.1.0              evaluate_0.11             
+## [15] assertive_0.3-5            assertive.base_0.0-7      
+## [17] curl_3.2                   yaml_2.2.0                
+## [19] xfun_0.3                   GenomeInfoDbData_1.1.0    
+## [21] withr_2.1.2                stringr_1.3.1             
+## [23] httr_1.3.1                 knitr_1.20                
+## [25] xml2_1.2.0                 devtools_1.13.6           
+## [27] assertive.strings_0.0-3    Biostrings_2.48.0         
+## [29] assertive.types_0.0-3      assertive.datetimes_0.0-2 
+## [31] assertive.sets_0.0-3       assertive.matrices_0.0-1  
+## [33] rprojroot_1.3-2            assertive.code_0.0-1      
+## [35] R6_2.2.2                   bookdown_0.7              
+## [37] rmarkdown_1.10             magrittr_1.5              
+## [39] backports_1.1.2            assertive.numbers_0.0-2   
+## [41] codetools_0.2-15           assertive.models_0.0-1    
+## [43] htmltools_0.3.6            stringi_1.1.7             
+## [45] assertive.data.uk_0.0-1    RCurl_1.95-4.11           
+## [47] assertive.reflection_0.0-4</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>

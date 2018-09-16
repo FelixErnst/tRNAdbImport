@@ -34,7 +34,6 @@ NULL
 #' @import GenomicRanges
 #' @import tRNA
 NULL
-requireNamespace("assertive")
 
 # constants --------------------------------------------------------------------
 

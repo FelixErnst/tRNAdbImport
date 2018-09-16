@@ -55,22 +55,6 @@ gr <- import.mttRNAdb.id(mtdbID = gr[1]$tRNA_dbID)
 istRNAdbGRanges(gr)
 ```
 
-# Subsetting tRNAs
-
-The results can be interogated and subset further on specific tRNA features 
-using the functions of the `tRNA` package. Here is an example:
-
-```{r}
-library(tRNA)
-gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae")
-gr[hasAcceptorStem(gr, unpaired = TRUE)]
-# mismatches and bulged are subsets of unpaired
-gr[hasAcceptorStem(gr, mismatches = TRUE)]
-# combination of different structure parameters
-gr[hasAcceptorStem(gr, mismatches = TRUE) & 
-       hasDloop(gr, length = 8)]
-```
-
 # Session info
 
 ```{r}
