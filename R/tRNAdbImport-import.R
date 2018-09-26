@@ -40,15 +40,14 @@ NULL
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' import.tRNAdb(organism = "Saccharomyces cerevisiae",
 #'               aminoacids = c("Phe","Ala"),
 #'               anticodons = c("GAA"))
 #' import.tRNAdb.id(tdbID = "tdbD00000785")
-#' import.tRNAdb.blast(blastSeq = 
+#' import.tRNAdb.blast(blastSeq =
 #' "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
-#' import.mttRNAdb(organism = "Bos taurus")
-#' }
+#' import.mttRNAdb(organism = "Bos taurus",
+#'                 aminoacids = c("Phe"))
 NULL
 
 #' @rdname import.tRNAdb
@@ -116,17 +115,6 @@ import.tRNAdb.blast <- function(blastSeq,
                              verbose = verbose)
   return(.convert_tRNAdb_result_to_GRanges(res))
 }
-# #' @rdname import.tRNAdb
-# #' @export
-# import.mttRNAdb.blast <- function(blastSeq,
-#                                   dbURL = TRNA_DB_URL_MT,
-#                                   verbose = FALSE){
-#   import.tRNAdb.blast(blastSeq = blastSeq,
-#                       database = NA,
-#                       origin = NA,
-#                       dbURL = dbURL,
-#                       verbose = verbose)
-# }
 
 #' @rdname import.tRNAdb
 #' @export
@@ -147,11 +135,14 @@ import.tRNAdb <- function(organism = "",
                           verbose = FALSE){
   # input check
   assertive::assert_is_a_bool(verbose)
-  .checkValueValidity(aminoacids, c(Biostrings::AMINO_ACID_CODE[names(Biostrings::AMINO_ACID_CODE) %in% unique(Biostrings::GENETIC_CODE)],
-                                    "Pyr",
-                                    "Sec",
-                                    "Ini",
-                                    ""))
+  .checkValueValidity(
+    aminoacids, 
+    c(Biostrings::AMINO_ACID_CODE[names(Biostrings::AMINO_ACID_CODE) %in% 
+                                    unique(Biostrings::GENETIC_CODE)],
+      "Pyr",
+      "Sec",
+      "Ini",
+      ""))
   .checkValueValidity(anticodons, c(names(Biostrings::GENETIC_CODE),
                                     ""))
   .checkValueValidity(database, TRNA_DB_TYPE)
@@ -319,7 +310,7 @@ import.mttRNAdb <- function(organism = "",
   df$tRNA_str <- seqs$tRNA_str
   df$tRNA_CCA.end <- seqs$tRNA_CCA.end
   # add additional info
-  df$no <- 1:nrow(df)
+  df$no <- seq_len(nrow(df))
   df$tRNA_length <- nchar(df$tRNA_seq)
   # order columns
   colOrder <- c("no",
@@ -341,18 +332,31 @@ import.mttRNAdb <- function(organism = "",
 }
 
 .extract_page_numbers <- function(xml){
-  ans <- unique(xml2::xml_attr(xml2::xml_find_all(xml, './/td[@class="querynavtd"]//select[@name="position"]//option'),"value"))
+  ans <- unique(xml2::xml_attr(xml2::xml_find_all(
+    xml,
+    './/td[@class="querynavtd"]//select[@name="position"]//option'),
+    "value"))
   ans
 }
 
 .extract_data_frame_from_xml_per_page <- function(xml){
-  ids <- xml2::xml_attr(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//input[@type="checkbox"][@name="selection"]'),"value")
-  dbType <- xml2::xml_attr(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//td[2]'),"class")
+  ids <- xml2::xml_attr(xml2::xml_find_all(
+    xml,
+    './/tr[@class="listtabletd"]//input[@type="checkbox"][@name="selection"]'),
+    "value")
+  dbType <- xml2::xml_attr(xml2::xml_find_all(
+    xml,
+    './/tr[@class="listtabletd"]//td[2]'),
+    "class")
   if(any(dbType == "GRAY")){
     dbType[dbType == "GRAY"] <- "mt"
   }
-  aminoacid <- as.character(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//span[@class="aminoacid"]/text()'))
-  organism <- as.character(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//td[3]//span[@class="middle"]//a/text()'))
+  aminoacid <- as.character(xml2::xml_find_all(
+    xml,
+    './/tr[@class="listtabletd"]//span[@class="aminoacid"]/text()'))
+  organism <- as.character(xml2::xml_find_all(
+    xml,
+    './/tr[@class="listtabletd"]//td[3]//span[@class="middle"]//a/text()'))
   organism <- lapply(stringr::str_split(organism,","),"[",1)
   strain <- vapply(stringr::str_split(organism," "),
                    function(s){
@@ -365,10 +369,13 @@ import.mttRNAdb <- function(organism = "",
   strain[stringr::str_detect(strain,"\\.\\.\\.")] <- ""
   organism <- vapply(stringr::str_split(organism," "),
                      function(s){
-                       paste(s[1:2],collapse = " ")
+                       paste(s[c(1,2)],collapse = " ")
                      },
                      character(1))
-  verified <- xml2::xml_attr(xml2::xml_find_all(xml, './/tr[@class="listtabletd"]//td[2]//img'),"title")
+  verified <- xml2::xml_attr(xml2::xml_find_all(
+    xml,
+    './/tr[@class="listtabletd"]//td[2]//img'),
+    "title")
   verified <- unname(TRNA_DB_VERIFIED[match(verified, names(TRNA_DB_VERIFIED))])
   ans <- data.frame(tRNA_dbID = ids,
                     tRNA_db = toupper(dbType),
@@ -383,7 +390,7 @@ import.mttRNAdb <- function(organism = "",
 .extract_sequences_and_structures <- function(input,
                                               df){
   input <- stringr::str_split(input,"\n")[[1]]
-  input <- split(input[1:(length(input)-1)],
+  input <- split(input[seq_len(length(input)-1)],
                 rep(c(1,2,3),(length(input)-1)/3))
   input[[1]] <- strsplit(input[[1]],"\\|")
   ids <- gsub(">","",vapply(input[[1]],"[",character(1),1))
@@ -401,7 +408,7 @@ import.mttRNAdb <- function(organism = "",
                    character(1))
   organism <- vapply(stringr::str_split(organism," "),
                      function(s){
-                       paste(s[1:2],collapse = " ")
+                       paste(s[c(1,2)],collapse = " ")
                      },
                      character(1))
   seq <- input[[2]]
@@ -415,7 +422,7 @@ import.mttRNAdb <- function(organism = "",
     seq[f] <- unlist(mapply(
       function(s,p){
         p2 <- c(0,as.numeric(as.character(p)),nchar(s)+1)
-        p <- split(p2, rep(1:(nrow(p)+1),nrow(p)))
+        p <- split(p2, rep(seq_len(nrow(p)+1),nrow(p)))
         paste(vapply(p,
                      function(z){
                        substr(s,z[1]+1,z[2]-1)
@@ -428,7 +435,7 @@ import.mttRNAdb <- function(organism = "",
     str[f] <- unlist(mapply(
       function(s,p){
         p2 <- c(0,as.numeric(as.character(p)),nchar(s)+1)
-        p <- split(p2, rep(1:(nrow(p)+1),nrow(p)))
+        p <- split(p2, rep(seq_len(nrow(p)+1),nrow(p)))
         paste(vapply(p,
                      function(z){
                        substr(s,z[1]+1,z[2]-1)
@@ -458,7 +465,9 @@ import.mttRNAdb <- function(organism = "",
     stop("Result from the tRNAdb contain invalid dot bracket annotation.\n",
          e,
          "\ntRNAdb ids: '",
-         paste(ids[as.numeric(gsub("'","",stringr::str_extract(e,"'[0-9]++'")))],
+         paste(ids[as.numeric(gsub("'",
+                                   "",
+                                   stringr::str_extract(e,"'[0-9]++'")))],
                collapse = "', '"),
          "'",
          call. = FALSE)

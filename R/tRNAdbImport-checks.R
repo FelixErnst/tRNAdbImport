@@ -15,9 +15,10 @@ NULL
 #' @return a logical value
 #' 
 #' @examples 
-#' \donttest{
+#' gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
+#'               aminoacids = c("Phe","Ala"),
+#'               anticodons = c("GAA"))
 #' istRNAdbGRanges(gr)
-#' }
 NULL
 #' @rdname istRNAdbGRanges
 #' @export

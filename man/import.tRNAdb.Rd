@@ -10,11 +10,6 @@
 \alias{import.mttRNAdb.id}
 \alias{import.tRNAdb.blast}
 \alias{import.mttRNAdb.blast}
-\alias{import.tRNAdb.id}
-\alias{import.mttRNAdb.id}
-\alias{import.tRNAdb.blast}
-\alias{import.tRNAdb}
-\alias{import.mttRNAdb}
 \title{Importing information from the tRNA db as GRanges object}
 \format{An object of class \code{character} of length 1.}
 \usage{
@@ -87,14 +82,13 @@ a GRanges object containing the information from the tRNA db
 title
 }
 \examples{
-\donttest{
 import.tRNAdb(organism = "Saccharomyces cerevisiae",
               aminoacids = c("Phe","Ala"),
               anticodons = c("GAA"))
 import.tRNAdb.id(tdbID = "tdbD00000785")
-import.tRNAdb.blast(blastSeq = 
+import.tRNAdb.blast(blastSeq =
 "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
-import.mttRNAdb(organism = "Bos taurus")
-}
+import.mttRNAdb(organism = "Bos taurus",
+                aminoacids = c("Phe"))
 }
 \keyword{datasets}

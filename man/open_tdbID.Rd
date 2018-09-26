@@ -3,7 +3,6 @@
 \name{open_tdbID}
 \alias{open_tdbID}
 \alias{open_mtdbID}
-\alias{open_mtdbID}
 \title{Open a tRNA db entry in a browser}
 \usage{
 open_tdbID(tdbID, dbURL = TRNA_DB_URL)
@@ -17,14 +16,15 @@ open_mtdbID(mtdbID, dbURL = TRNA_DB_URL_MT)
 
 \item{mtdbID}{a mtRNA db}
 }
+\value{
+opens a window in a default browser for tRNAdb entry selected
+}
 \description{
 \code{open.tdbID} is a wrapper for \code{browseURL} and opens a tab for a
 tRNAdb entry in a browser. Please note, that the tRNAdb server does not show
 the entry right away without a session ID. open twice upon first use.
 }
 \examples{
-\donttest{
 open_tdbID("tdbD00000785")
 open_mtdbID("mtdbD00000907")
-}
 }

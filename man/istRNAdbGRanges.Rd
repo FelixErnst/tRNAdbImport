@@ -3,7 +3,6 @@
 \docType{methods}
 \name{istRNAdbGRanges}
 \alias{istRNAdbGRanges}
-\alias{istRNAdbGRanges}
 \alias{istRNAdbGRanges,GRanges-method}
 \title{tRNAdb compatibility check}
 \usage{
@@ -22,7 +21,8 @@ a logical value
 information expected for a tRNAdb result.
 }
 \examples{
-\donttest{
+gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
+              aminoacids = c("Phe","Ala"),
+              anticodons = c("GAA"))
 istRNAdbGRanges(gr)
-}
 }
