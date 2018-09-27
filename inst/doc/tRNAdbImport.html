@@ -11,7 +11,7 @@
 
 <meta name="author" content="Felix G.M. Ernst" />
 
-<meta name="date" content="2018-09-16" />
+<meta name="date" content="2018-09-27" />
 
 <title>Importing from to tRNAdb and mitotRNAdb as GRanges</title>
 
@@ -227,7 +227,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Importing from to tRNAdb and mitotRNAdb as GRanges</h1>
 <p class="author-name">Felix G.M. Ernst</p>
-<h4 class="date"><em>2018-09-16</em></h4>
+<h4 class="date"><em>2018-09-27</em></h4>
 <h4 class="abstract">Abstract</h4>
 <p>Example of importing tRNAdb output as GRanges</p>
 <h4 class="package">Package</h4>
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function() {
 gr &lt;- import.tRNAdb(organism = &quot;Saccharomyces cerevisiae&quot;,
               aminoacids = c(&quot;Phe&quot;,&quot;Ala&quot;))
 # get a Phenylalanine tRNA from yeast
-gr &lt;- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == &quot;Phe&quot;,][1]$tRNA_dbID)
+gr &lt;- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == &quot;Phe&quot;,][1]$tRNAdb_ID)
 # find the same tRNA via blast
 gr &lt;- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)</code></pre>
 <pre><code>## Warning: The result potentially contains modified DNA and RNA nucleotides.
@@ -272,14 +272,24 @@ gr &lt;- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)</code></pre>
 gr &lt;- import.mttRNAdb(organism = &quot;Bos taurus&quot;, 
                       aminoacids = &quot;Ala&quot;)
 # get one mitochrondrial tRNA in Bos taurus. 
-gr &lt;- import.mttRNAdb.id(mtdbID = gr[1]$tRNA_dbID)
+gr &lt;- import.mttRNAdb.id(mtdbID = gr[1]$tRNAdb_ID)
 
 # check that the result has the appropriate columns
 istRNAdbGRanges(gr)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 </div>
+<div id="further-analysis" class="section level1">
+<h1><span class="header-section-number">3</span> Further analysis</h1>
+<p>The output can be saved or directly used for further analysis.</p>
+<pre class="r"><code>library(Biostrings)
+library(rtracklayer)
+writeXStringSet(gr$tRNA_seq, filepath = tempfile())
+gff &lt;- tRNAdb2GFF(gr)
+export.gff3(gff, con = tempfile())</code></pre>
+<p>Please have a look at the <code>tRNA</code> package for further analysis of the tRNA sequences.</p>
+</div>
 <div id="session-info" class="section level1">
-<h1><span class="header-section-number">3</span> Session info</h1>
+<h1><span class="header-section-number">4</span> Session info</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -297,35 +307,50 @@ istRNAdbGRanges(gr)</code></pre>
 ## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] BiocStyle_2.8.2      tRNAdbImport_0.99.1  tRNA_0.0.0.9000     
-## [4] GenomicRanges_1.32.6 GenomeInfoDb_1.16.0  IRanges_2.14.11     
-## [7] S4Vectors_0.18.3     BiocGenerics_0.26.0 
+##  [1] rtracklayer_1.40.5   Biostrings_2.48.0    XVector_0.20.0      
+##  [4] BiocStyle_2.8.2      tRNAdbImport_0.99.1  tRNA_0.99.1         
+##  [7] GenomicRanges_1.32.6 GenomeInfoDb_1.16.0  IRanges_2.14.11     
+## [10] S4Vectors_0.18.3     BiocGenerics_0.26.0 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.18               assertive.data_0.0-1      
-##  [3] BiocInstaller_1.30.0       compiler_3.5.1            
-##  [5] XVector_0.20.0             bitops_1.0-6              
-##  [7] assertive.files_0.0-2      assertive.properties_0.0-4
-##  [9] tools_3.5.1                assertive.data.us_0.0-1   
-## [11] zlibbioc_1.26.0            digest_0.6.16             
-## [13] memoise_1.1.0              evaluate_0.11             
-## [15] assertive_0.3-5            assertive.base_0.0-7      
-## [17] curl_3.2                   yaml_2.2.0                
-## [19] xfun_0.3                   GenomeInfoDbData_1.1.0    
-## [21] withr_2.1.2                stringr_1.3.1             
-## [23] httr_1.3.1                 knitr_1.20                
-## [25] xml2_1.2.0                 devtools_1.13.6           
-## [27] assertive.strings_0.0-3    Biostrings_2.48.0         
-## [29] assertive.types_0.0-3      assertive.datetimes_0.0-2 
-## [31] assertive.sets_0.0-3       assertive.matrices_0.0-1  
-## [33] rprojroot_1.3-2            assertive.code_0.0-1      
-## [35] R6_2.2.2                   bookdown_0.7              
-## [37] rmarkdown_1.10             magrittr_1.5              
-## [39] backports_1.1.2            assertive.numbers_0.0-2   
-## [41] codetools_0.2-15           assertive.models_0.0-1    
-## [43] htmltools_0.3.6            stringi_1.1.7             
-## [45] assertive.data.uk_0.0-1    RCurl_1.95-4.11           
-## [47] assertive.reflection_0.0-4</code></pre>
+##  [1] Biobase_2.40.0              httr_1.3.1                 
+##  [3] assertive.sets_0.0-3        assertthat_0.2.0           
+##  [5] assertive.data_0.0-1        GenomeInfoDbData_1.1.0     
+##  [7] Rsamtools_1.32.3            yaml_2.2.0                 
+##  [9] lattice_0.20-35             pillar_1.3.0               
+## [11] backports_1.1.2             glue_1.3.0                 
+## [13] assertive.data.uk_0.0-1     assertive.matrices_0.0-1   
+## [15] digest_0.6.16               assertive.types_0.0-3      
+## [17] colorspace_1.3-2            Matrix_1.2-14              
+## [19] htmltools_0.3.6             plyr_1.8.4                 
+## [21] XML_3.98-1.16               pkgconfig_2.0.2            
+## [23] devtools_1.13.6             assertive.data.us_0.0-1    
+## [25] assertive.properties_0.0-4  assertive.reflection_0.0-4 
+## [27] bookdown_0.7                zlibbioc_1.26.0            
+## [29] purrr_0.2.5                 scales_1.0.0               
+## [31] assertive_0.3-5             BiocParallel_1.14.2        
+## [33] tibble_1.4.2                ggplot2_3.0.0              
+## [35] withr_2.1.2                 SummarizedExperiment_1.10.1
+## [37] assertive.code_0.0-1        lazyeval_0.2.1             
+## [39] magrittr_1.5                crayon_1.3.4               
+## [41] assertive.strings_0.0-3     memoise_1.1.0              
+## [43] evaluate_0.11               assertive.numbers_0.0-2    
+## [45] xml2_1.2.0                  BiocInstaller_1.30.0       
+## [47] tools_3.5.1                 matrixStats_0.54.0         
+## [49] assertive.files_0.0-2       stringr_1.3.1              
+## [51] munsell_0.5.0               DelayedArray_0.6.5         
+## [53] bindrcpp_0.2.2              compiler_3.5.1             
+## [55] rlang_0.2.2                 grid_3.5.1                 
+## [57] RCurl_1.95-4.11             rstudioapi_0.7             
+## [59] assertive.models_0.0-1      assertive.base_0.0-7       
+## [61] bitops_1.0-6                rmarkdown_1.10             
+## [63] gtable_0.2.0                codetools_0.2-15           
+## [65] curl_3.2                    assertive.datetimes_0.0-2  
+## [67] R6_2.2.2                    GenomicAlignments_1.16.0   
+## [69] knitr_1.20                  dplyr_0.7.6                
+## [71] bindr_0.1.1                 rprojroot_1.3-2            
+## [73] stringi_1.1.7               Rcpp_0.12.18               
+## [75] tidyselect_0.2.4            xfun_0.3</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>

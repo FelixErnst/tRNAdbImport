@@ -10,6 +10,13 @@
 \alias{import.mttRNAdb.id}
 \alias{import.tRNAdb.blast}
 \alias{import.mttRNAdb.blast}
+\alias{tRNAdb2GFF}
+\alias{import.tRNAdb.id}
+\alias{import.mttRNAdb.id}
+\alias{import.tRNAdb.blast}
+\alias{import.tRNAdb}
+\alias{import.mttRNAdb}
+\alias{tRNAdb2GFF}
 \title{Importing information from the tRNA db as GRanges object}
 \format{An object of class \code{character} of length 1.}
 \usage{
@@ -35,6 +42,8 @@ import.mttRNAdb(organism = "", strain = "", taxonomyID = "",
   aminoacids = "", anticodons = "", sequences = list(),
   structures = list(), reference = "", comment = "", pubmed = "",
   genes = "", dbURL = TRNA_DB_URL_MT, verbose = FALSE)
+
+tRNAdb2GFF(input)
 }
 \arguments{
 \item{tdbID}{a tRNAdb ID}
@@ -74,6 +83,8 @@ search. Please use the \code{\(\)} or \code{><} dot bracket annotation.}
 \item{pubmed}{a pubmed ID}
 
 \item{genes}{a gene name as a character string}
+
+\item{input}{a GRanges object which passes the \code{istRNAdbGRanges} check}
 }
 \value{
 a GRanges object containing the information from the tRNA db

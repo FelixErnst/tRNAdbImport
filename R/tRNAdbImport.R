@@ -47,12 +47,12 @@ TRNA_DB_ORIGIN <- c("plastid" = "chloro",
 
 TRNADB_FEATURES <- c(
   tRNA:::TRNA_FEATURES,
-  "tRNA_dbID",
-  "tRNA_db",
-  "tRNA_organism",
-  "tRNA_strain",
-  "tRNA_taxonomyID",
-  "tRNA_verified"
+  "tRNAdb_ID",
+  "tRNAdb",
+  "tRNAdb_organism",
+  "tRNAdb_strain",
+  "tRNAdb_taxonomyID",
+  "tRNAdb_verified"
 )
 
 #' @rdname import.tRNAdb

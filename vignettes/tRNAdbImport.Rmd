@@ -40,7 +40,7 @@ library(tRNAdbImport)
 gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
               aminoacids = c("Phe","Ala"))
 # get a Phenylalanine tRNA from yeast
-gr <- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == "Phe",][1]$tRNA_dbID)
+gr <- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == "Phe",][1]$tRNAdb_ID)
 # find the same tRNA via blast
 gr <- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)
 
@@ -49,11 +49,32 @@ gr <- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)
 gr <- import.mttRNAdb(organism = "Bos taurus", 
                       aminoacids = "Ala")
 # get one mitochrondrial tRNA in Bos taurus. 
-gr <- import.mttRNAdb.id(mtdbID = gr[1]$tRNA_dbID)
+gr <- import.mttRNAdb.id(mtdbID = gr[1]$tRNAdb_ID)
 
 # check that the result has the appropriate columns
 istRNAdbGRanges(gr)
 ```
+
+# Further analysis
+
+The output can be saved or directly used for further analysis.
+
+```{r, echo=FALSE}
+suppressPackageStartupMessages({
+  library(Biostrings)
+  library(rtracklayer)
+})
+```
+```{r}
+library(Biostrings)
+library(rtracklayer)
+writeXStringSet(gr$tRNA_seq, filepath = tempfile())
+gff <- tRNAdb2GFF(gr)
+export.gff3(gff, con = tempfile())
+```
+
+Please have a look at the `tRNA` package for further analysis of the tRNA
+sequences.
 
 # Session info
 

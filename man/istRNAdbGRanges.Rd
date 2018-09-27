@@ -3,15 +3,16 @@
 \docType{methods}
 \name{istRNAdbGRanges}
 \alias{istRNAdbGRanges}
+\alias{istRNAdbGRanges}
 \alias{istRNAdbGRanges,GRanges-method}
 \title{tRNAdb compatibility check}
 \usage{
-istRNAdbGRanges(gr)
+istRNAdbGRanges(x)
 
-\S4method{istRNAdbGRanges}{GRanges}(gr)
+\S4method{istRNAdbGRanges}{GRanges}(x)
 }
 \arguments{
-\item{gr}{the \code{GRanges} object to test}
+\item{x}{the \code{GRanges} object to test}
 }
 \value{
 a logical value

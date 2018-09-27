@@ -3,6 +3,7 @@
 \name{open_tdbID}
 \alias{open_tdbID}
 \alias{open_mtdbID}
+\alias{open_mtdbID}
 \title{Open a tRNA db entry in a browser}
 \usage{
 open_tdbID(tdbID, dbURL = TRNA_DB_URL)

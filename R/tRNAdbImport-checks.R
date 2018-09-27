@@ -10,7 +10,7 @@ NULL
 #' \code{istRNAdbGRanges} checks whether a GRanges object contains the 
 #' information expected for a tRNAdb result.
 #' 
-#' @param gr the \code{GRanges} object to test
+#' @param x the \code{GRanges} object to test
 #' 
 #' @return a logical value
 #' 
@@ -24,9 +24,8 @@ NULL
 #' @export
 setMethod(
   f = "istRNAdbGRanges",
-  signature = signature(gr = "GRanges"),
-  definition = function(gr) .check_trnadb_granges(gr,
-                                                    TRNADB_FEATURES))
+  signature = signature(x = "GRanges"),
+  definition = function(x) .check_trnadb_granges(x,TRNADB_FEATURES))
 
 # checks whether a GRanges object is tRNAdb compatible
 .check_trnadb_granges <- function(gr,features){

@@ -3,7 +3,7 @@ NULL
 
 #' @name import.tRNAdb
 #' @aliases import.tRNAdb import.mttRNAdb import.tRNAdb.id import.mttRNAdb.id
-#' import.tRNAdb.blast import.mttRNAdb.blast
+#' import.tRNAdb.blast import.mttRNAdb.blast tRNAdb2GFF
 #' 
 #' @title Importing information from the tRNA db as GRanges object
 #' 
@@ -30,6 +30,7 @@ NULL
 #' @param origin one ore more of "plastid", "mitochondrial" or "allothers"
 #' @param dbURL the URL of the tRNA db
 #' @param verbose whether to report verbose information from the httr calls
+#' @param input a GRanges object which passes the \code{istRNAdbGRanges} check
 #'
 #' @return a GRanges object containing the information from the tRNA db
 #' 
@@ -205,12 +206,12 @@ import.mttRNAdb <- function(organism = "",
 .convert_tRNAdb_result_to_GRanges <- function(df){
   df <- S4Vectors::DataFrame(df)
   gr <- GenomicRanges::GRanges(
-    seqnames = df$tRNA_dbID,
+    seqnames = df$tRNAdb_ID,
     ranges = IRanges::IRanges(start = rep(1,nrow(df)),
                               end = nchar(df$tRNA_seq)),
     strand = "*",
     df)
-  if(all(df$tRNA_db != "RNA")){
+  if(all(df$tRNAdb != "RNA")){
     gr$tRNA_seq <- Biostrings::DNAStringSet(gr$tRNA_seq)
   } else {
     warning("The result potentially contains modified DNA and RNA nucleotides.",
@@ -269,7 +270,7 @@ import.mttRNAdb <- function(organism = "",
                  ans
                })
   df <- do.call(rbind,df)
-  df <- df[order(df$tRNA_dbID),]
+  df <- df[order(df$tRNAdb_ID),]
   # get sequence and structure information
   if(verbose){
     seqs <- httr::POST(paste0(httr::modify_url(dbURL),
@@ -289,9 +290,9 @@ import.mttRNAdb <- function(organism = "",
   }
   seqs <- .extract_sequences_and_structures(httr::content(seqs),
                                             df)
-  seqs <- seqs[order(seqs$tRNA_dbID),]
+  seqs <- seqs[order(seqs$tRNAdb_ID),]
   # make sure results match
-  if(!all(seqs$tRNA_dbID == df$tRNA_dbID)){
+  if(!all(seqs$tRNAdb_ID == df$tRNAdb_ID)){
     stop("Function 'fastastruct' returned unmatching list of tRNAdb entries.",
          "\nReason: unmatching tRNAdb ids.",
          call. = FALSE)
@@ -302,9 +303,9 @@ import.mttRNAdb <- function(organism = "",
          call. = FALSE)
   }
   # merge results
-  df$tRNA_organism <- seqs$tRNA_organism
-  df$tRNA_strain <- seqs$tRNA_strain
-  df$tRNA_taxonomyID <- seqs$tRNA_taxonomyID
+  df$tRNAdb_organism <- seqs$tRNAdb_organism
+  df$tRNAdb_strain <- seqs$tRNAdb_strain
+  df$tRNAdb_taxonomyID <- seqs$tRNAdb_taxonomyID
   df$tRNA_anticodon <- seqs$tRNA_anticodon
   df$tRNA_seq <- seqs$tRNA_seq
   df$tRNA_str <- seqs$tRNA_str
@@ -320,12 +321,12 @@ import.mttRNAdb <- function(organism = "",
                 "tRNA_seq",
                 "tRNA_str",
                 "tRNA_CCA.end",
-                "tRNA_db",
-                "tRNA_dbID",
-                "tRNA_organism",
-                "tRNA_strain",
-                "tRNA_taxonomyID",
-                "tRNA_verified")
+                "tRNAdb",
+                "tRNAdb_ID",
+                "tRNAdb_organism",
+                "tRNAdb_strain",
+                "tRNAdb_taxonomyID",
+                "tRNAdb_verified")
   df <- df[,c(colOrder,
               colnames(df)[!(colnames(df) %in% colOrder)])]
   df
@@ -377,12 +378,12 @@ import.mttRNAdb <- function(organism = "",
     './/tr[@class="listtabletd"]//td[2]//img'),
     "title")
   verified <- unname(TRNA_DB_VERIFIED[match(verified, names(TRNA_DB_VERIFIED))])
-  ans <- data.frame(tRNA_dbID = ids,
-                    tRNA_db = toupper(dbType),
+  ans <- data.frame(tRNAdb_ID = ids,
+                    tRNAdb = toupper(dbType),
                     tRNA_type = aminoacid,
-                    tRNA_organism = unlist(organism),
-                    tRNA_strain = unlist(strain),
-                    tRNA_verified = verified,
+                    tRNAdb_organism = unlist(organism),
+                    tRNAdb_strain = unlist(strain),
+                    tRNAdb_verified = verified,
                     stringsAsFactors = FALSE)
   ans
 }
@@ -473,12 +474,12 @@ import.mttRNAdb <- function(organism = "",
          call. = FALSE)
   })
   # create result as data.frame
-  ans <- data.frame(tRNA_dbID = ids,
+  ans <- data.frame(tRNAdb_ID = ids,
                     tRNA_type = aminoacid,
                     tRNA_anticodon = anticodon,
-                    tRNA_organism = organism,
-                    tRNA_strain = strain,
-                    tRNA_taxonomyID = taxonomyID,
+                    tRNAdb_organism = organism,
+                    tRNAdb_strain = strain,
+                    tRNAdb_taxonomyID = taxonomyID,
                     tRNA_seq = seq,
                     tRNA_str = str,
                     tRNA_CCA.end = cca,
@@ -567,4 +568,44 @@ import.mttRNAdb <- function(organism = "",
   }
   #
   args
+}
+
+#' @rdname import.tRNAdb
+#' @export
+tRNAdb2GFF <- function(input) {
+  .check_trnadb_granges(input, TRNADB_FEATURES)
+  tRNAdb <- input
+  # patch GRanges object with necessary columns for gff3 comptability
+  S4Vectors::mcols(tRNAdb)$tRNA_seq <- 
+    as.character(S4Vectors::mcols(tRNAdb)$tRNA_seq)
+  S4Vectors::mcols(tRNAdb)$ID <- S4Vectors::mcols(tRNAdb)$tRNAdb_ID
+  S4Vectors::mcols(tRNAdb)$type <- "tRNA"
+  S4Vectors::mcols(tRNAdb)$type <- 
+    as.factor(S4Vectors::mcols(tRNAdb)$type)
+  S4Vectors::mcols(tRNAdb)$source <- "tRNAdb"
+  S4Vectors::mcols(tRNAdb)$source <- 
+    as.factor(S4Vectors::mcols(tRNAdb)$source)
+  S4Vectors::mcols(tRNAdb)$score <- NA
+  S4Vectors::mcols(tRNAdb)$score <- 
+    as.numeric(S4Vectors::mcols(tRNAdb)$score)
+  S4Vectors::mcols(tRNAdb)$phase <- NA
+  S4Vectors::mcols(tRNAdb)$phase <- 
+    as.integer(S4Vectors::mcols(tRNAdb)$phase)
+  S4Vectors::mcols(tRNAdb)$score <- 
+    as.integer(S4Vectors::mcols(tRNAdb)$phase)
+  # arrange columns in correct order
+  S4Vectors::mcols(tRNAdb) <- 
+    cbind(S4Vectors::mcols(tRNAdb)[,c("source",
+                                      "type",
+                                      "score",
+                                      "phase",
+                                      "ID")],
+          S4Vectors::mcols(tRNAdb)[,-which(colnames(
+            S4Vectors::mcols(tRNAdb)) %in% 
+              c("source",
+                "type",
+                "score",
+                "phase",
+                "ID"))])
+  return(tRNAdb)
 }

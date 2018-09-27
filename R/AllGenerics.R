@@ -9,5 +9,5 @@ NULL
 #' @export
 setGeneric ( 
   name = "istRNAdbGRanges",
-  def = function(gr) standardGeneric("istRNAdbGRanges")
+  def = function(x) standardGeneric("istRNAdbGRanges")
 )
