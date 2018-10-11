@@ -1,11 +1,12 @@
 Package: tRNAdbImport
 Title: Importing from to tRNAdb and mitotRNAdb as GRanges objects
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: person("Felix GM", 
                   "Ernst", 
                   email = "felix.gm.ernst@outlook.com", 
                   role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: tRNAdbImport imports the entries of the tRNAdb and mtRNAdb 
+    (http://trna.bioinf.uni-leipzig.de) as GRanges object.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -19,6 +20,7 @@ Depends:
     tRNA
 Imports:
     Biostrings,
+    rtracklayer,
     stringr,
     xml2,
     S4Vectors,
@@ -31,6 +33,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
+    httptest,
     BiocStyle
 Collate:
     'tRNAdbImport.R'

@@ -492,6 +492,7 @@ import.mttRNAdb <- function(organism = "",
   vapply(strList,
          function(str){
            end <- max(str$pos)
+           # the last three nucleotides must be unpaired
            all(str[str$pos %in% (end-2):end,]$forward == 0)
          },
          logical(1))
