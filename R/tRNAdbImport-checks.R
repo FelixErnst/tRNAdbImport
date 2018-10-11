@@ -29,7 +29,7 @@ setMethod(
 
 # checks whether a GRanges object is tRNAdb compatible
 .check_trnadb_granges <- function(gr,features){
-  if(class(gr) != "GRanges"){
+  if(!is(gr,"GRanges")){
     stop("Input is not a GRanges object.",
          call. = FALSE)
   }
