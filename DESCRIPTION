@@ -1,6 +1,6 @@
 Package: tRNAdbImport
-Title: Importing from to tRNAdb and mitotRNAdb as GRanges objects
-Version: 0.99.4
+Title: Importing from tRNAdb and mitotRNAdb as GRanges objects
+Version: 0.99.5
 Authors@R: person("Felix GM", 
                   "Ernst", 
                   email = "felix.gm.ernst@outlook.com", 
