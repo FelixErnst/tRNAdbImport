@@ -42,27 +42,30 @@ NULL
 #'
 #' @examples
 #' import.tRNAdb(organism = "Saccharomyces cerevisiae",
-#'               aminoacids = c("Phe","Ala"),
-#'               anticodons = c("GAA"))
+#'               aminoacids = c("Phe","Ala"))
 #' import.tRNAdb.id(tdbID = "tdbD00000785")
 #' import.tRNAdb.blast(blastSeq =
 #' "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
 #' import.mttRNAdb(organism = "Bos taurus",
-#'                 aminoacids = c("Phe"))
+#'                 aminoacids = c("Phe","Ala"))
+#' import.mttRNAdb.id(mtdbID = "mtdbD00000900")
 NULL
 
 #' @rdname import.tRNAdb
 #' @export
 import.tRNAdb.id <- function(tdbID,
-                             database = "DNA",
-                             origin = "allothers",
+                             database = c("DNA",
+                                          "RNA"),
+                             origin = c("allothers",
+                                        "plastid",
+                                        "mitochondrial"),
                              dbURL = TRNA_DB_URL,
                              verbose = FALSE){
   # input check
   assertive::assert_is_a_bool(verbose)
   assertive::assert_all_are_non_empty_character(tdbID)
-  .checkValueValidity(database, TRNA_DB_TYPE)
-  .checkValueValidity(origin, c(names(TRNA_DB_ORIGIN),NA))
+  database <- match.arg(database[1], c(TRNA_DB_TYPE,NA_character_))
+  origin <- match.arg(origin[1], c(names(TRNA_DB_ORIGIN),NA_character_))
   # assemble arguments
   args <- .assemble_args_for_tRNA_db_search(tdbID = tdbID,
                                             database = database,
@@ -81,8 +84,8 @@ import.mttRNAdb.id <- function(mtdbID,
                                dbURL = TRNA_DB_URL_MT,
                                verbose = FALSE){
   import.tRNAdb.id(tdbID = mtdbID,
-                   database = NA,
-                   origin = NA,
+                   database = NA_character_,
+                   origin = NA_character_,
                    dbURL = dbURL,
                    verbose = verbose)
 }
@@ -90,16 +93,19 @@ import.mttRNAdb.id <- function(mtdbID,
 #' @rdname import.tRNAdb
 #' @export
 import.tRNAdb.blast <- function(blastSeq,
-                                database = "DNA",
-                                origin = "allothers",
+                                database = c("DNA",
+                                             "RNA"),
+                                origin = c("allothers",
+                                           "plastid",
+                                           "mitochondrial"),
                                 dbURL = TRNA_DB_URL,
                                 verbose = FALSE){
   # input check
   assertive::assert_is_a_bool(verbose)
   blastSeq <- as.character(blastSeq) # in case it is a single DNAString*
   assertive::assert_is_a_non_empty_string(blastSeq)
-  .checkValueValidity(database, TRNA_DB_TYPE)
-  .checkValueValidity(origin, c(names(TRNA_DB_ORIGIN),NA))
+  database <- match.arg(database[1], c(TRNA_DB_TYPE,NA_character_))
+  origin <- match.arg(origin[1], c(names(TRNA_DB_ORIGIN),NA_character_))
   # assemble arguments
   args <- .assemble_args_for_tRNA_db_search(blastSequence = blastSeq,
                                             database = database,
@@ -130,8 +136,11 @@ import.tRNAdb <- function(organism = "",
                           comment  = "",
                           pubmed = "",
                           genes = "",
-                          database = "DNA",
-                          origin = "allothers",
+                          database = c("DNA",
+                                       "RNA"),
+                          origin = c("allothers",
+                                     "plastid",
+                                     "mitochondrial"),
                           dbURL = TRNA_DB_URL,
                           verbose = FALSE){
   # input check
@@ -146,8 +155,8 @@ import.tRNAdb <- function(organism = "",
       ""))
   .checkValueValidity(anticodons, c(names(Biostrings::GENETIC_CODE),
                                     ""))
-  .checkValueValidity(database, TRNA_DB_TYPE)
-  .checkValueValidity(origin, c(names(TRNA_DB_ORIGIN),NA))
+  database <- match.arg(database[1], c(TRNA_DB_TYPE,NA_character_))
+  origin <- match.arg(origin[1], c(names(TRNA_DB_ORIGIN),NA_character_))
   # assemble arguments
   args <- .assemble_args_for_tRNA_db_search(organism = organism,
                                             strain = strain,
@@ -196,8 +205,8 @@ import.mttRNAdb <- function(organism = "",
                 comment = comment,
                 pubmed = pubmed,
                 genes = genes,
-                database = NA,
-                origin = NA,
+                database = NA_character_,
+                origin = NA_character_,
                 dbURL = dbURL,
                 verbose = verbose)
 }
@@ -223,8 +232,9 @@ import.mttRNAdb <- function(organism = "",
 
 .get_trna_db_result <- function(args,
                                 dbURL,
-                                dbFunction = "Search",
+                                dbFunction = c("Search","Blast"),
                                 verbose){
+  dbFunction <- match.arg(dbFunction)
   # get main result and establish session
   if(verbose){
     res <- httr::POST(paste0(httr::modify_url(dbURL),
@@ -537,7 +547,10 @@ import.mttRNAdb <- function(organism = "",
   }
   #
   if(!missing(aminoacids) && !is.na(aminoacids) && aminoacids != ""){
-    args[["aminoacid"]] <- list(aminoacids)
+    aminoacids <- as.list(aminoacids)
+    names(aminoacids) <- rep("aminoacid",length(aminoacids))
+    args <- append(args,
+                   aminoacids)
   }
   #
   if(!missing(anticodons) && !is.na(anticodons) && anticodons != ""){

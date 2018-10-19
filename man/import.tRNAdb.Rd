@@ -24,19 +24,20 @@ TRNA_DB_URL
 
 TRNA_DB_URL_MT
 
-import.tRNAdb.id(tdbID, database = "DNA", origin = "allothers",
-  dbURL = TRNA_DB_URL, verbose = FALSE)
+import.tRNAdb.id(tdbID, database = c("DNA", "RNA"), origin = c("allothers",
+  "plastid", "mitochondrial"), dbURL = TRNA_DB_URL, verbose = FALSE)
 
 import.mttRNAdb.id(mtdbID, dbURL = TRNA_DB_URL_MT, verbose = FALSE)
 
-import.tRNAdb.blast(blastSeq, database = "DNA", origin = "allothers",
-  dbURL = TRNA_DB_URL, verbose = FALSE)
+import.tRNAdb.blast(blastSeq, database = c("DNA", "RNA"),
+  origin = c("allothers", "plastid", "mitochondrial"), dbURL = TRNA_DB_URL,
+  verbose = FALSE)
 
 import.tRNAdb(organism = "", strain = "", taxonomyID = "",
   aminoacids = "", anticodons = "", sequences = list(),
   structures = list(), reference = "", comment = "", pubmed = "",
-  genes = "", database = "DNA", origin = "allothers",
-  dbURL = TRNA_DB_URL, verbose = FALSE)
+  genes = "", database = c("DNA", "RNA"), origin = c("allothers",
+  "plastid", "mitochondrial"), dbURL = TRNA_DB_URL, verbose = FALSE)
 
 import.mttRNAdb(organism = "", strain = "", taxonomyID = "",
   aminoacids = "", anticodons = "", sequences = list(),
@@ -94,12 +95,12 @@ title
 }
 \examples{
 import.tRNAdb(organism = "Saccharomyces cerevisiae",
-              aminoacids = c("Phe","Ala"),
-              anticodons = c("GAA"))
+              aminoacids = c("Phe","Ala"))
 import.tRNAdb.id(tdbID = "tdbD00000785")
 import.tRNAdb.blast(blastSeq =
 "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
 import.mttRNAdb(organism = "Bos taurus",
-                aminoacids = c("Phe"))
+                aminoacids = c("Phe","Ala"))
+import.mttRNAdb.id(mtdbID = "mtdbD00000900")
 }
 \keyword{datasets}

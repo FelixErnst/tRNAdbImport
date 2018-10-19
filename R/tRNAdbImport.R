@@ -40,7 +40,7 @@ NULL
 TRNA_DB_VERIFIED <- c("verified sequence" = TRUE,
                       "unverified sequence" = FALSE,
                       "not verifiable sequence" = NA)
-TRNA_DB_TYPE <- c("RNA","DNA",NA)
+TRNA_DB_TYPE <- c("RNA","DNA")
 TRNA_DB_ORIGIN <- c("plastid" = "chloro",
                     "mitochondrial" = "mito",
                     "allothers" = "allothers")
