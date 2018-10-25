@@ -33,24 +33,39 @@ are returned as a `GRanges` object.
 
 # Importing as GRanges
 
-```{r}
+```{r, echo=FALSE}
+suppressPackageStartupMessages(
+  library(tRNAdbImport)
+)
+```
+```{r eval=FALSE}
 library(tRNAdbImport)
+```
+```{r}
 # accessing tRNAdb
 # tRNA from yeast for Alanine and Phenylalanine
 gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
               aminoacids = c("Phe","Ala"))
+```
+```{r}
 # get a Phenylalanine tRNA from yeast
 gr <- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == "Phe",][1]$tRNAdb_ID)
+```
+```{r}
 # find the same tRNA via blast
 gr <- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)
-
+```
+```{r}
 # accessing mtRNAdb
 # get the mitochrondrial tRNA for Alanine in Bos taurus
 gr <- import.mttRNAdb(organism = "Bos taurus", 
                       aminoacids = "Ala")
+```
+```{r}
 # get one mitochrondrial tRNA in Bos taurus. 
 gr <- import.mttRNAdb.id(mtdbID = gr[1]$tRNAdb_ID)
-
+```
+```{r}
 # check that the result has the appropriate columns
 istRNAdbGRanges(gr)
 ```
