@@ -213,6 +213,7 @@ import.mttRNAdb <- function(organism = "",
 
 # convert results from the tRNA db into a GRanges object
 .convert_tRNAdb_result_to_GRanges <- function(df){
+  # convert to DataFrame is not already present
   df <- S4Vectors::DataFrame(df)
   gr <- GenomicRanges::GRanges(
     seqnames = df$tRNAdb_ID,
@@ -227,6 +228,7 @@ import.mttRNAdb <- function(organism = "",
             "\nDownstream analysis might be limited.",
             call. = FALSE)
   }
+  gr$tRNA_str <- Structstrings::DotBracketStringSet(gr$tRNA_str)
   gr
 }
 
@@ -388,14 +390,47 @@ import.mttRNAdb <- function(organism = "",
     './/tr[@class="listtabletd"]//td[2]//img'),
     "title")
   verified <- unname(TRNA_DB_VERIFIED[match(verified, names(TRNA_DB_VERIFIED))])
-  ans <- data.frame(tRNAdb_ID = ids,
-                    tRNAdb = toupper(dbType),
-                    tRNA_type = aminoacid,
-                    tRNAdb_organism = unlist(organism),
-                    tRNAdb_strain = unlist(strain),
-                    tRNAdb_verified = verified,
-                    stringsAsFactors = FALSE)
+  ans <- DataFrame(tRNAdb_ID = ids,
+                   tRNAdb = toupper(dbType),
+                   tRNA_type = aminoacid,
+                   tRNAdb_organism = unlist(organism),
+                   tRNAdb_strain = unlist(strain),
+                   tRNAdb_verified = verified)
   ans
+}
+.pos_letters <- function(x,chrs){
+  lapply(chrs,
+         function(chr){
+           stringr::str_locate_all(x, chr)
+         })
+}
+.sanitize_structures <- function(ids,str){
+  open <- .pos_letters(str,Structstrings::STRUCTURE_OPEN_CHR)
+  close <- .pos_letters(str,Structstrings::STRUCTURE_CLOSE_CHR)
+  lengthOpen <- lapply(open,function(z){lengths(z)})
+  lengthClose <- lapply(close,function(z){lengths(z)})
+  lengthMatch <- lapply(
+    seq_along(lengthOpen),
+    function(i){
+      which(unlist(lengthOpen[[i]]) != unlist(lengthClose[[i]]))
+    })
+  f <- unique(unlist(lengthMatch))
+  if(length(f) > 0L){
+    warning("Result from the tRNAdb contain invalid dot bracket annotation.\n",
+            "The following tRNAdb ids contain the invalid structure ",
+            "information: '",
+            paste(ids[f],
+                  collapse = "', '"),
+            "'")
+    strLengths <- unlist(lapply(str[f], width))
+    newStr <- unlist(lapply(strLengths,
+                            function(len){
+                              paste(rep(".",len),collapse = "")
+                            }))
+    str[f] <- newStr
+  }
+  # this checks for validity
+  str <- DotBracketStringSet(str)
 }
 
 .extract_sequences_and_structures <- function(input,
@@ -468,37 +503,25 @@ import.mttRNAdb <- function(organism = "",
                collapse = "\n"))
   }
   # since apparently not all dot bracket annotations are valid, we have to 
-  # catch them
-  tryCatch({
-    cca <- .has_CCA_end(str)
-  },
-  error = function(e){
-    stop("Result from the tRNAdb contain invalid dot bracket annotation.\n",
-         e,
-         "\ntRNAdb ids: '",
-         paste(ids[as.numeric(gsub("'",
-                                   "",
-                                   stringr::str_extract(e,"'[0-9]++'")))],
-               collapse = "', '"),
-         "'",
-         call. = FALSE)
-  })
+  # catch them. .sanitize_structures removes invalid structures. the
+  # result is now valid.
+  str <- .sanitize_structures(ids,str) # not it is a DotBracketStringSet
+  cca <- .has_CCA_end(str)
   # create result as data.frame
-  ans <- data.frame(tRNAdb_ID = ids,
-                    tRNA_type = aminoacid,
-                    tRNA_anticodon = anticodon,
-                    tRNAdb_organism = organism,
-                    tRNAdb_strain = strain,
-                    tRNAdb_taxonomyID = taxonomyID,
-                    tRNA_seq = seq,
-                    tRNA_str = str,
-                    tRNA_CCA.end = cca,
-                    stringsAsFactors = FALSE)
+  ans <- DataFrame(tRNAdb_ID = ids,
+                   tRNA_type = aminoacid,
+                   tRNA_anticodon = anticodon,
+                   tRNAdb_organism = organism,
+                   tRNAdb_strain = strain,
+                   tRNAdb_taxonomyID = taxonomyID,
+                   tRNA_seq = seq,
+                   tRNA_str = str,
+                   tRNA_CCA.end = cca)
   ans
 }
 
 .has_CCA_end <- function(structures){
-  strList <- tRNA::getBasePairing(structures)
+  strList <- getBasePairing(structures)
   vapply(strList,
          function(str){
            end <- max(str$pos)
@@ -592,6 +615,8 @@ tRNAdb2GFF <- function(input) {
   # patch GRanges object with necessary columns for gff3 comptability
   S4Vectors::mcols(tRNAdb)$tRNA_seq <- 
     as.character(S4Vectors::mcols(tRNAdb)$tRNA_seq)
+  S4Vectors::mcols(tRNAdb)$tRNA_str <- 
+    as.character(S4Vectors::mcols(tRNAdb)$tRNA_str)
   S4Vectors::mcols(tRNAdb)$ID <- S4Vectors::mcols(tRNAdb)$tRNAdb_ID
   S4Vectors::mcols(tRNAdb)$type <- "tRNA"
   S4Vectors::mcols(tRNAdb)$type <- 

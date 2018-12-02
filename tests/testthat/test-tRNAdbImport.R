@@ -19,7 +19,7 @@ test_that("tRNAdbImport:",{
   expect_type(mcols(gr)$tRNA_type, "character")
   expect_type(mcols(gr)$tRNA_anticodon, "character")
   expect_type(mcols(gr)$tRNA_seq, "S4")
-  expect_type(mcols(gr)$tRNA_str, "character")
+  expect_type(mcols(gr)$tRNA_str, "S4")
   expect_type(mcols(gr)$tRNA_CCA.end, "logical")
   expect_type(mcols(gr)$tRNAdb_ID, "character")
   expect_type(mcols(gr)$tRNAdb_organism, "character")

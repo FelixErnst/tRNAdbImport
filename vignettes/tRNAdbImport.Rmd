@@ -45,7 +45,7 @@ library(tRNAdbImport)
 # accessing tRNAdb
 # tRNA from yeast for Alanine and Phenylalanine
 gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
-              aminoacids = c("Phe","Ala"))
+                    aminoacids = c("Phe","Ala"))
 ```
 ```{r}
 # get a Phenylalanine tRNA from yeast

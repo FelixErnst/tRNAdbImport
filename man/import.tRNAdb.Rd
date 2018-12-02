@@ -11,12 +11,6 @@
 \alias{import.tRNAdb.blast}
 \alias{import.mttRNAdb.blast}
 \alias{tRNAdb2GFF}
-\alias{import.tRNAdb.id}
-\alias{import.mttRNAdb.id}
-\alias{import.tRNAdb.blast}
-\alias{import.tRNAdb}
-\alias{import.mttRNAdb}
-\alias{tRNAdb2GFF}
 \title{Importing information from the tRNA db as GRanges object}
 \format{An object of class \code{character} of length 1.}
 \usage{
@@ -24,14 +18,15 @@ TRNA_DB_URL
 
 TRNA_DB_URL_MT
 
-import.tRNAdb.id(tdbID, database = c("DNA", "RNA"), origin = c("allothers",
-  "plastid", "mitochondrial"), dbURL = TRNA_DB_URL, verbose = FALSE)
+import.tRNAdb.id(tdbID, database = c("DNA", "RNA"),
+  origin = c("allothers", "plastid", "mitochondrial"),
+  dbURL = TRNA_DB_URL, verbose = FALSE)
 
 import.mttRNAdb.id(mtdbID, dbURL = TRNA_DB_URL_MT, verbose = FALSE)
 
 import.tRNAdb.blast(blastSeq, database = c("DNA", "RNA"),
-  origin = c("allothers", "plastid", "mitochondrial"), dbURL = TRNA_DB_URL,
-  verbose = FALSE)
+  origin = c("allothers", "plastid", "mitochondrial"),
+  dbURL = TRNA_DB_URL, verbose = FALSE)
 
 import.tRNAdb(organism = "", strain = "", taxonomyID = "",
   aminoacids = "", anticodons = "", sequences = list(),
