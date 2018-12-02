@@ -32,7 +32,9 @@ NULL
 #' @import httr
 #' @import xml2
 #' @import GenomicRanges
+#' @import Biostrings
 #' @import Structstrings
+#' @import Modstrings
 #' @import tRNA
 NULL
 

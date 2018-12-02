@@ -21,6 +21,7 @@ Depends:
     tRNA
 Imports:
     Biostrings,
+    Modstrings,
     stringr,
     xml2,
     S4Vectors,
