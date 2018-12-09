@@ -8,18 +8,17 @@ Using `tRNAdbImport` the tRNAdb can be accessed as outlined on the website
 results are returned as a `GRanges` object and can be further used in a
 BioC context.
 
-## Installation
+# Installation
 
-The current version of `tRNAdbImport` is available from GitHub.
+The current version of the `tRNAdbImport` package is available from Bioconductor.
  
 ```{r}
-devtools::install_github("FelixErnst/tRNA")
-devtools::install_github("FelixErnst/tRNAdbImport")
-# Load and attach thepackage
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("tRNAdbImport")
+# Load and attach the package
 library("tRNAdbImport")
-# this also attaches the tRNA package
 ```
-A submission to Bioconductor might follow
 
 ## Literature
 
