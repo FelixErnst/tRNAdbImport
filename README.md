@@ -22,11 +22,10 @@ library("tRNAdbImport")
 
 ## Literature
 
-- Jühling, Frank, Mario Mörl, Roland K. Hartmann, Mathias Sprinzl, Peter F.
-Stadler, and Joern Pütz. 2009. “TRNAdb 2009: Compilation of tRNA Sequences and
-tRNA Genes.” Nucleic Acids Research 37 (suppl_1): D159–D162.
-doi:[10.1093/nar/gkn772](https://doi.org/10.1093/nar/gkn772).
-- Sprinzl,
-Mathias, and Konstantin S. Vassilenko. 2005. “Compilation of tRNA Sequences and
-Sequences of tRNA Genes.” Nucleic Acids Research 33 (suppl_1): D139–D140.
-doi:[10.1093/nar/gki012](https://doi.org/10.1093/nar/gki012).
+- Jühling, Frank; Mörl, Mario; Hartmann, Roland K.; Sprinzl, Mathias; Stadler,
+Peter F.; Pütz, Joern (2009): "TRNAdb 2009: Compilation of tRNA Sequences and
+tRNA Genes." Nucleic Acids Research 37 (suppl_1): D159–D162.
+doi:[10.1093/nar/gkn772](https://doi.org/10.1093/nar/gkn772). 
+- Sprinzl, Mathias; Vassilenko, Konstantin S. (2005): "Compilation of tRNA 
+Sequences and Sequences of tRNA Genes." Nucleic Acids Research 33 (suppl_1): 
+D139–D140. doi:[10.1093/nar/gki012](https://doi.org/10.1093/nar/gki012).
