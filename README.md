@@ -1,8 +1,8 @@
 # tRNAdbImport
 
-The tRNAdb and mttRNAdb [Juehling et al. 2009](#Literature) is a compilation of
+The tRNAdb and mttRNAdb ([Juehling et al. 2009](#Literature)) is a compilation of
 tRNA sequences and tRNA genes. It is a follow up version of the database of
-Sprinzl et al. [Sprinzl et al. 2005](#Literature).
+[Sprinzl et al. (2005)](#Literature).
 Using `tRNAdbImport` the tRNAdb can be accessed as outlined on the website
 [trna.bioinf.uni-leipzig.de](trna.bioinf.uni-leipzig.de) directly via R. The
 results are returned as a `GRanges` object and can be further used in a
