@@ -1,4 +1,5 @@
 # tRNAdbImport
+<img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/tRNA/tRNA.png" height="120">
 
 The tRNAdb and mttRNAdb ([Juehling et al. 2009](#Literature)) is a compilation of
 tRNA sequences and tRNA genes. It is a follow up version of the database of
