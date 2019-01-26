@@ -17,11 +17,11 @@ biocViews:
 Depends:
     R (>= 3.5),
     GenomicRanges,
+    Modstrings,
     Structstrings,
     tRNA
 Imports:
     Biostrings,
-    Modstrings,
     stringr,
     xml2,
     S4Vectors,

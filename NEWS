@@ -1,0 +1,7 @@
+Changes in version 0.99.0 (2019-10-11)
++ Submitted to Bioconductor
+
+Changes in version 1.1.1 (2019-01-26)
++ added Modstrings and Structstrings dependency
++ depending on the database selected the tRNA sequences will be returned as DNAStringSet or ModRNAStringSet
++ now uses the DotBracketStringSet from the Structstrings package to store the structure information

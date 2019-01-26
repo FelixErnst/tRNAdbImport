@@ -70,6 +70,35 @@ gr <- import.mttRNAdb.id(mtdbID = gr[1]$tRNAdb_ID)
 istRNAdbGRanges(gr)
 ```
 
+# Importing as GRanges from the RNA database
+
+The tRNAdb offers two different sets of data, one containing DNA sequences and
+one containing RNA sequences. Depending on the database selected, `DNA` as 
+default, the GRanges will contain a `DNAStringSet` or a `ModRNAStringSet` as
+the `tRNA_seq` column. Because the RNA sequences can contain modified 
+nucleotides, the `ModRNAStringSet` class is used instead of the `RNAStringSet` 
+class to store the sequences correctly with all information intact.
+
+```{r}
+gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
+                    aminoacids = c("Phe","Ala"),
+                    database = "RNA")
+gr$tRNA_seq
+```
+
+The special characters in the sequence might no exactly match the ones shown on
+the website, since they are sanitized internally to a unified dictionary defined
+in the `Modstrings` package. However, the type of modification encoded will 
+remain the same (See the `Modstrings` package for more details).
+
+The information on the position and type of the modifications can also be 
+converted into a tabular format using the `separate` function from the 
+`Modstrings` package.
+
+```{r}
+separate(gr$tRNA_seq)
+```
+
 # Further analysis
 
 The output can be saved or directly used for further analysis.
