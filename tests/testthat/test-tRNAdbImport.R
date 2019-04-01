@@ -2,7 +2,7 @@ library(tRNAdbImport)
 
 context("tRNAdbImport")
 test_that("tRNAdbImport:",{
-  skip_if_disconnected(url = "http://trna.bioinf.uni-leipzig.de/")
+  httptest::skip_if_disconnected(url = "http://trna.bioinf.uni-leipzig.de/")
   gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
                       aminoacids = c("Phe","Ala"))
   expect_equal(c("no","tRNA_length","tRNA_type","tRNA_anticodon","tRNA_seq",
@@ -19,7 +19,7 @@ test_that("tRNAdbImport:",{
   expect_type(mcols(gr)$tRNA_type, "character")
   expect_type(mcols(gr)$tRNA_anticodon, "character")
   expect_type(mcols(gr)$tRNA_seq, "S4")
-  expect_type(mcols(gr)$tRNA_str, "character")
+  expect_type(mcols(gr)$tRNA_str, "S4")
   expect_type(mcols(gr)$tRNA_CCA.end, "logical")
   expect_type(mcols(gr)$tRNAdb_ID, "character")
   expect_type(mcols(gr)$tRNAdb_organism, "character")
@@ -58,13 +58,5 @@ test_that("input failure and warning test:",{
   )
   expect_error(
     tRNAdbImport:::.has_CCA_end("")
-  )
-  
-  skip_if_disconnected(url = "http://trna.bioinf.uni-leipzig.de/")
-  expect_warning(
-    import.tRNAdb(organism = "Saccharomyces cerevisiae",
-                  aminoacids = c("Phe","Ala"),
-                  database = "RNA"),
-    "The result potentially contains modified DNA and RNA nucleotides"
   )
 })

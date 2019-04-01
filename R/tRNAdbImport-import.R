@@ -213,20 +213,16 @@ import.mttRNAdb <- function(organism = "",
 
 # convert results from the tRNA db into a GRanges object
 .convert_tRNAdb_result_to_GRanges <- function(df){
+  # convert to DataFrame is not already present
   df <- S4Vectors::DataFrame(df)
+  # construct a valid StringSet object
+  df <- .sanitize_sequences(df)
   gr <- GenomicRanges::GRanges(
     seqnames = df$tRNAdb_ID,
     ranges = IRanges::IRanges(start = rep(1,nrow(df)),
-                              end = nchar(df$tRNA_seq)),
+                              end = width(df$tRNA_seq)),
     strand = "*",
     df)
-  if(all(df$tRNAdb != "RNA")){
-    gr$tRNA_seq <- Biostrings::DNAStringSet(gr$tRNA_seq)
-  } else {
-    warning("The result potentially contains modified DNA and RNA nucleotides.",
-            "\nDownstream analysis might be limited.",
-            call. = FALSE)
-  }
   gr
 }
 
@@ -283,7 +279,7 @@ import.mttRNAdb <- function(organism = "",
   df <- df[order(df$tRNAdb_ID),]
   # get sequence and structure information
   if(verbose){
-    seqs <- httr::POST(paste0(httr::modify_url(dbURL),
+    info <- httr::POST(paste0(httr::modify_url(dbURL),
                               "DataOutput/Tools"),
                        body = list("allnormalchecked" = "on",
                                    "function" = "fastastruct",
@@ -291,35 +287,35 @@ import.mttRNAdb <- function(organism = "",
                        encode = "form",
                        httr::verbose())
   } else {
-    seqs <- httr::POST(paste0(httr::modify_url(dbURL),
+    info <- httr::POST(paste0(httr::modify_url(dbURL),
                               "DataOutput/Tools"),
                        body = list("allnormalchecked" = "on",
                                    "function" = "fastastruct",
                                    "sel" = ""),
                        encode = "form")
   }
-  seqs <- .extract_sequences_and_structures(httr::content(seqs),
-                                            df)
-  seqs <- seqs[order(seqs$tRNAdb_ID),]
+  info <- .extract_tRNAdb_information(httr::content(info),
+                                      df)
+  info <- info[order(info$tRNAdb_ID),]
   # make sure results match
-  if(!all(seqs$tRNAdb_ID == df$tRNAdb_ID)){
+  if(!all(info$tRNAdb_ID == df$tRNAdb_ID)){
     stop("Function 'fastastruct' returned unmatching list of tRNAdb entries.",
          "\nReason: unmatching tRNAdb ids.",
          call. = FALSE)
   }
-  if(!all(seqs$tRNA_type == df$tRNA_type)){
+  if(!all(info$tRNA_type == df$tRNA_type)){
     stop("Function 'fastastruct' returned unmatching list of tRNAdb entries.",
          "\nReason: unmatching tRNA types.",
          call. = FALSE)
   }
   # merge results
-  df$tRNAdb_organism <- seqs$tRNAdb_organism
-  df$tRNAdb_strain <- seqs$tRNAdb_strain
-  df$tRNAdb_taxonomyID <- seqs$tRNAdb_taxonomyID
-  df$tRNA_anticodon <- seqs$tRNA_anticodon
-  df$tRNA_seq <- seqs$tRNA_seq
-  df$tRNA_str <- seqs$tRNA_str
-  df$tRNA_CCA.end <- seqs$tRNA_CCA.end
+  df$tRNAdb_organism <- info$tRNAdb_organism
+  df$tRNAdb_strain <- info$tRNAdb_strain
+  df$tRNAdb_taxonomyID <- info$tRNAdb_taxonomyID
+  df$tRNA_anticodon <- info$tRNA_anticodon
+  df$tRNA_seq <- info$tRNA_seq
+  df$tRNA_str <- info$tRNA_str
+  df$tRNA_CCA.end <- info$tRNA_CCA.end
   # add additional info
   df$no <- seq_len(nrow(df))
   df$tRNA_length <- nchar(df$tRNA_seq)
@@ -359,8 +355,8 @@ import.mttRNAdb <- function(organism = "",
     xml,
     './/tr[@class="listtabletd"]//td[2]'),
     "class")
-  if(any(dbType == "GRAY")){
-    dbType[dbType == "GRAY"] <- "mt"
+  if(any(dbType %in% c("GRAY","gray"))){
+    dbType[dbType %in% c("GRAY","gray")] <- "MT"
   }
   aminoacid <- as.character(xml2::xml_find_all(
     xml,
@@ -388,18 +384,99 @@ import.mttRNAdb <- function(organism = "",
     './/tr[@class="listtabletd"]//td[2]//img'),
     "title")
   verified <- unname(TRNA_DB_VERIFIED[match(verified, names(TRNA_DB_VERIFIED))])
-  ans <- data.frame(tRNAdb_ID = ids,
-                    tRNAdb = toupper(dbType),
-                    tRNA_type = aminoacid,
-                    tRNAdb_organism = unlist(organism),
-                    tRNAdb_strain = unlist(strain),
-                    tRNAdb_verified = verified,
-                    stringsAsFactors = FALSE)
+  ans <- DataFrame(tRNAdb_ID = ids,
+                   tRNAdb = toupper(dbType),
+                   tRNA_type = aminoacid,
+                   tRNAdb_organism = unlist(organism),
+                   tRNAdb_strain = unlist(strain),
+                   tRNAdb_verified = verified)
   ans
 }
+.pos_letters <- function(x,chrs){
+  lapply(chrs,
+         function(chr){
+           stringr::str_locate_all(x, chr)
+         })
+}
+.sanitize_structures <- function(ids,str){
+  open <- .pos_letters(str,Structstrings::STRUCTURE_OPEN_CHR)
+  close <- .pos_letters(str,Structstrings::STRUCTURE_CLOSE_CHR)
+  lengthOpen <- lapply(open,function(z){lengths(z)})
+  lengthClose <- lapply(close,function(z){lengths(z)})
+  lengthMatch <- lapply(
+    seq_along(lengthOpen),
+    function(i){
+      which(unlist(lengthOpen[[i]]) != unlist(lengthClose[[i]]))
+    })
+  f <- unique(unlist(lengthMatch))
+  if(length(f) > 0L){
+    warning("Result from the tRNAdb contain invalid dot bracket annotation.\n",
+            "The following tRNAdb ids contain the invalid structure ",
+            "information: '",
+            paste(ids[f],
+                  collapse = "', '"),
+            "'")
+    strLengths <- unlist(lapply(str[f], width))
+    newStr <- unlist(lapply(strLengths,
+                            function(len){
+                              paste(rep(".",len),collapse = "")
+                            }))
+    str[f] <- newStr
+  }
+  # this checks for validity
+  str <- Structstrings::DotBracketStringSet(str)
+}
+.sanitize_sequences <- function(df){
+  seqs <- df$tRNA_seq
+  f_dna <- which(df$tRNAdb == "DNA")
+  f_rna <- which(df$tRNAdb == "RNA" | df$tRNAdb == "MT")
+  seq_dna <- seqs[f_dna]
+  seq_rna <- seqs[f_rna]
+  if(length(seq_dna) > 0){
+    seq_dna <- Biostrings::DNAStringSet(seq_dna)
+  } else {
+    seq_dna <- NULL
+  }
+  if(length(seq_rna) > 0){
+    seq_rna <- Modstrings::sanitizeFromtRNAdb(seq_rna)
+    seq_modrna <- Modstrings::ModRNAStringSet(seq_rna)
+    seq_rna <- as(seq_modrna,"RNAStringSet")
+    seq_dna_test <- as(seq_rna,"DNAStringSet")
+    # if the ModRNAstringSet is actually a DNAStringset
+    if(all(as.character(seq_dna_test) == as.character(seq_modrna))){
+      seq_rna <- seq_dna_test
+    } else {
+      # if the ModRNAstringSet does contain modifications keep the ModRNAStringSet
+      if(!all(as.character(seq_rna) == as.character(seq_modrna))){
+        seq_rna <- seq_modrna
+      }
+    }
+    rm(seq_dna_test)
+    rm(seq_modrna)
+  } else {
+    seq_rna <- NULL
+  }
+  if(is(seq_rna,"ModRNAStringSet") || is(seq_rna,"RNAStringSet")){
+    seq_dna <- as(seq_dna,"RNAStringSet")
+  }
+  if(is(seq_rna,"ModRNAStringSet")){
+    seq_dna <- as(seq_dna,"ModRNAStringSet")
+  }
+  if(!is.null(seq_dna) &
+     !is.null(seq_rna) &
+     class(seq_rna) != class(seq_dna)){
+    stop("Something went wrong.")
+  }
+  seqs <- list(seq_dna,seq_rna) 
+  seqs <- do.call(c,
+                  seqs[!vapply(seqs,is.null,logical(1))])
+  seqs <- seqs[c(f_dna,f_rna)]
+  df$tRNA_seq <- seqs
+  df
+}
 
-.extract_sequences_and_structures <- function(input,
-                                              df){
+.extract_tRNAdb_information <- function(input,
+                                        df){
   input <- stringr::str_split(input,"\n")[[1]]
   input <- split(input[seq_len(length(input)-1)],
                 rep(c(1,2,3),(length(input)-1)/3))
@@ -468,37 +545,25 @@ import.mttRNAdb <- function(organism = "",
                collapse = "\n"))
   }
   # since apparently not all dot bracket annotations are valid, we have to 
-  # catch them
-  tryCatch({
-    cca <- .has_CCA_end(str)
-  },
-  error = function(e){
-    stop("Result from the tRNAdb contain invalid dot bracket annotation.\n",
-         e,
-         "\ntRNAdb ids: '",
-         paste(ids[as.numeric(gsub("'",
-                                   "",
-                                   stringr::str_extract(e,"'[0-9]++'")))],
-               collapse = "', '"),
-         "'",
-         call. = FALSE)
-  })
+  # catch them. .sanitize_structures removes invalid structures. the
+  # result is now valid.
+  str <- .sanitize_structures(ids,str) # not it is a DotBracketStringSet
+  cca <- .has_CCA_end(str)
   # create result as data.frame
-  ans <- data.frame(tRNAdb_ID = ids,
-                    tRNA_type = aminoacid,
-                    tRNA_anticodon = anticodon,
-                    tRNAdb_organism = organism,
-                    tRNAdb_strain = strain,
-                    tRNAdb_taxonomyID = taxonomyID,
-                    tRNA_seq = seq,
-                    tRNA_str = str,
-                    tRNA_CCA.end = cca,
-                    stringsAsFactors = FALSE)
+  ans <- DataFrame(tRNAdb_ID = ids,
+                   tRNA_type = aminoacid,
+                   tRNA_anticodon = anticodon,
+                   tRNAdb_organism = organism,
+                   tRNAdb_strain = strain,
+                   tRNAdb_taxonomyID = taxonomyID,
+                   tRNA_seq = seq,
+                   tRNA_str = str,
+                   tRNA_CCA.end = cca)
   ans
 }
 
 .has_CCA_end <- function(structures){
-  strList <- tRNA::getBasePairing(structures)
+  strList <- getBasePairing(structures)
   vapply(strList,
          function(str){
            end <- max(str$pos)
@@ -592,6 +657,8 @@ tRNAdb2GFF <- function(input) {
   # patch GRanges object with necessary columns for gff3 comptability
   S4Vectors::mcols(tRNAdb)$tRNA_seq <- 
     as.character(S4Vectors::mcols(tRNAdb)$tRNA_seq)
+  S4Vectors::mcols(tRNAdb)$tRNA_str <- 
+    as.character(S4Vectors::mcols(tRNAdb)$tRNA_str)
   S4Vectors::mcols(tRNAdb)$ID <- S4Vectors::mcols(tRNAdb)$tRNAdb_ID
   S4Vectors::mcols(tRNAdb)$type <- "tRNA"
   S4Vectors::mcols(tRNAdb)$type <- 

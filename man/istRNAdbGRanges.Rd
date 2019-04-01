@@ -3,7 +3,6 @@
 \docType{methods}
 \name{istRNAdbGRanges}
 \alias{istRNAdbGRanges}
-\alias{istRNAdbGRanges}
 \alias{istRNAdbGRanges,GRanges-method}
 \title{tRNAdb compatibility check}
 \usage{
