@@ -479,7 +479,7 @@ import.mttRNAdb <- function(organism = "",
                                         df){
   input <- stringr::str_split(input,"\n")[[1]]
   input <- split(input[seq_len(length(input)-1)],
-                rep(c(1,2,3),(length(input)-1)/3))
+                 rep(c(1,2,3),(length(input)-1)/3))
   input[[1]] <- strsplit(input[[1]],"\\|")
   ids <- gsub(">","",vapply(input[[1]],"[",character(1),1))
   aminoacid <- vapply(input[[1]],"[",character(1),4)
@@ -591,58 +591,65 @@ import.mttRNAdb <- function(organism = "",
   # base values
   args <- list(search = 0)
   #
-  if(!missing(origin) && !is.na(origin) && origin != ""){
+  if(!missing(origin) && length(origin) == 1L && !is.na(origin) && origin != ""){
     args[TRNA_DB_ORIGIN[names(TRNA_DB_ORIGIN) %in% origin]] <- "on"
   }
   #
-  if(!missing(database) && !is.na(database) && database != ""){
+  if(!missing(database) && length(database) == 1L && !is.na(database) && 
+     database != ""){
     args[["database"]] <- database
   }
   #
-  if(!missing(organism) && !is.na(organism) && organism != ""){
+  if(!missing(organism) && length(organism) == 1L && !is.na(organism) && 
+     organism != ""){
     args[["org"]] <- organism
   }
   #
-  if(!missing(strain) && !is.na(strain) && strain != ""){
+  if(!missing(strain) && length(strain) == 1L && !is.na(strain) && 
+     strain != ""){
     args[["strain"]] <- strain
   }
   #
-  if(!missing(taxonomyID) && !is.na(taxonomyID) && taxonomyID != ""){
+  if(!missing(taxonomyID) && length(taxonomyID) == 1L && !is.na(taxonomyID) && 
+     taxonomyID != ""){
     args[["TAX_ID"]] <- taxonomyID
   }
   #
-  if(!missing(aminoacids) && !is.na(aminoacids) && aminoacids != ""){
+  if(!missing(aminoacids) && all(!is.na(aminoacids)) && all(aminoacids != "")){
     aminoacids <- as.list(aminoacids)
     names(aminoacids) <- rep("aminoacid",length(aminoacids))
     args <- append(args,
                    aminoacids)
   }
   #
-  if(!missing(anticodons) && !is.na(anticodons) && anticodons != ""){
+  if(!missing(anticodons) && all(!is.na(anticodons)) && all(anticodons != "")){
     args[["antis"]] <- list(anticodons)
   }
   #
-  if(!missing(reference) && !is.na(reference) && reference != ""){
+  if(!missing(reference) && length(reference) == 1L && !is.na(reference) && 
+     reference != ""){
     args[["ref"]] <- reference
   }
   #
-  if(!missing(comment) && !is.na(comment) && comment != ""){
+  if(!missing(comment) && length(comment) == 1L && !is.na(comment) && 
+     comment != ""){
     args[["comment"]] <- comment
   }
   #
-  if(!missing(pubmed) && !is.na(pubmed) && pubmed != ""){
+  if(!missing(pubmed) && all(!is.na(pubmed)) && all(pubmed != "")){
     args[["pubmed"]] <- pubmed
   }
   #
-  if(!missing(genes) && !is.na(genes) && genes != ""){
+  if(!missing(genes) && all(!is.na(genes)) && all(genes != "")){
     args[["gen"]] <- genes
   }
   #
-  if(!missing(tdbID) && !is.na(tdbID) && tdbID != ""){
+  if(!missing(tdbID) && all(!is.na(tdbID)) && all(tdbID != "")){
     args[["searchID"]] <- tdbID
   }
   #
-  if(!missing(blastSequence) && !is.na(blastSequence) && blastSequence != ""){
+  if(!missing(blastSequence) && all(!is.na(blastSequence)) && 
+     all(blastSequence != "")){
     args[["sequence"]] <- blastSequence
   }
   #
