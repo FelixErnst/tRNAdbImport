@@ -1,7 +1,7 @@
 Package: tRNAdbImport
 Title: Importing from tRNAdb and mitotRNAdb as GRanges objects
-Version: 1.5.0
-Date: 2019-06-11
+Version: 1.5.1
+Date: 2020-01-09
 Authors@R: person("Felix G.M.", 
                   "Ernst", 
                   email = "felix.gm.ernst@outlook.com", 
@@ -48,5 +48,5 @@ Collate:
     'tRNAdbImport-open.R'
     'tRNAdbImport-utils.R'
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 BugReports: https://github.com/FelixErnst/tRNAdbImport/issues

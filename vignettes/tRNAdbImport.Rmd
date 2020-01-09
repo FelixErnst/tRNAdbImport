@@ -49,7 +49,7 @@ gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
 ```
 ```{r}
 # get a Phenylalanine tRNA from yeast
-gr <- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == "Phe",][1]$tRNAdb_ID)
+gr <- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == "Phe",][1L]$tRNAdb_ID)
 ```
 ```{r}
 # find the same tRNA via blast
@@ -63,7 +63,7 @@ gr <- import.mttRNAdb(organism = "Bos taurus",
 ```
 ```{r}
 # get one mitochrondrial tRNA in Bos taurus. 
-gr <- import.mttRNAdb.id(mtdbID = gr[1]$tRNAdb_ID)
+gr <- import.mttRNAdb.id(mtdbID = gr[1L]$tRNAdb_ID)
 ```
 ```{r}
 # check that the result has the appropriate columns

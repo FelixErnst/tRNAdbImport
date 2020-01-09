@@ -3,7 +3,6 @@
 \docType{package}
 \name{tRNAdbImport}
 \alias{tRNAdbImport}
-\alias{tRNAdbImport-package}
 \title{tRNAdbImport: Importing from to tRNAdb and mitotRNAdb as GRanges}
 \description{
 The tRNAdb and mttRNAdb (Jühling et al. 2009) is a compilation of tRNA 

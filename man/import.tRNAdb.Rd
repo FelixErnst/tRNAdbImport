@@ -18,26 +18,57 @@ TRNA_DB_URL
 
 TRNA_DB_URL_MT
 
-import.tRNAdb.id(tdbID, database = c("DNA", "RNA"),
+import.tRNAdb.id(
+  tdbID,
+  database = c("DNA", "RNA"),
   origin = c("allothers", "plastid", "mitochondrial"),
-  dbURL = TRNA_DB_URL, verbose = FALSE)
+  dbURL = TRNA_DB_URL,
+  verbose = FALSE
+)
 
 import.mttRNAdb.id(mtdbID, dbURL = TRNA_DB_URL_MT, verbose = FALSE)
 
-import.tRNAdb.blast(blastSeq, database = c("DNA", "RNA"),
+import.tRNAdb.blast(
+  blastSeq,
+  database = c("DNA", "RNA"),
   origin = c("allothers", "plastid", "mitochondrial"),
-  dbURL = TRNA_DB_URL, verbose = FALSE)
+  dbURL = TRNA_DB_URL,
+  verbose = FALSE
+)
 
-import.tRNAdb(organism = "", strain = "", taxonomyID = "",
-  aminoacids = "", anticodons = "", sequences = list(),
-  structures = list(), reference = "", comment = "", pubmed = "",
-  genes = "", database = c("DNA", "RNA"), origin = c("allothers",
-  "plastid", "mitochondrial"), dbURL = TRNA_DB_URL, verbose = FALSE)
+import.tRNAdb(
+  organism = "",
+  strain = "",
+  taxonomyID = "",
+  aminoacids = "",
+  anticodons = "",
+  sequences = list(),
+  structures = list(),
+  reference = "",
+  comment = "",
+  pubmed = "",
+  genes = "",
+  database = c("DNA", "RNA"),
+  origin = c("allothers", "plastid", "mitochondrial"),
+  dbURL = TRNA_DB_URL,
+  verbose = FALSE
+)
 
-import.mttRNAdb(organism = "", strain = "", taxonomyID = "",
-  aminoacids = "", anticodons = "", sequences = list(),
-  structures = list(), reference = "", comment = "", pubmed = "",
-  genes = "", dbURL = TRNA_DB_URL_MT, verbose = FALSE)
+import.mttRNAdb(
+  organism = "",
+  strain = "",
+  taxonomyID = "",
+  aminoacids = "",
+  anticodons = "",
+  sequences = list(),
+  structures = list(),
+  reference = "",
+  comment = "",
+  pubmed = "",
+  genes = "",
+  dbURL = TRNA_DB_URL_MT,
+  verbose = FALSE
+)
 
 tRNAdb2GFF(input)
 }
