@@ -11,7 +11,6 @@ Description: tRNAdbImport imports the entries of the tRNAdb and mtRNAdb
     (http://trna.bioinf.uni-leipzig.de) as GRanges object.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-LazyData: true
 biocViews:
     Software,
     Visualization,
