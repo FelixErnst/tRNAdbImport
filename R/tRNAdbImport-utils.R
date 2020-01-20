@@ -2,8 +2,7 @@
 NULL
 
 #input type checks
-.checkValueValidity <- function(value,
-                                checkValues,
+.checkValueValidity <- function(value, checkValues,
                                 .xvalue = assertive::get_name_in_parent(value)){
   if(!all(value %in% checkValues)){
     stop("'",.xvalue,

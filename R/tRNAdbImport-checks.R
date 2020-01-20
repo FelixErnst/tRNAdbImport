@@ -25,22 +25,23 @@ NULL
 setMethod(
   f = "istRNAdbGRanges",
   signature = signature(x = "GRanges"),
-  definition = function(x) .check_trnadb_granges(x,TRNADB_FEATURES))
+  definition = function(x) .check_trnadb_granges(x, TRNADB_FEATURES))
 
 # checks whether a GRanges object is tRNAdb compatible
 .check_trnadb_granges <- function(gr,features){
   if(!is(gr,"GRanges")){
-    stop("Input is not a GRanges object.",
-         call. = FALSE)
+    warning("Input is not a GRanges object.", call. = FALSE)
+    return(FALSE)
   }
   # check input
   if(length(intersect(features,colnames(S4Vectors::mcols(gr)))) !=
      length(features)){
-    stop("Input GRanges object does not meet the requirements of the ",
-         "function. The following columns are expected:\n'",
-         paste(features, collapse = "', '"),
-         "'.",
-         call. = FALSE)
+    warning("Input GRanges object does not meet the requirements of the ",
+            "function. The following columns are expected:\n'",
+            paste(features, collapse = "', '"),
+            "'.",
+            call. = FALSE)
+    return(FALSE)
   }
   return(TRUE)
 }

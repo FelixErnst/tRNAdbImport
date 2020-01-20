@@ -9,7 +9,9 @@ test_that("tRNAdbImport:",{
                  "tRNA_str","tRNA_CCA.end","tRNAdb","tRNAdb_ID",
                  "tRNAdb_organism","tRNAdb_strain","tRNAdb_taxonomyID",
                  "tRNAdb_verified"),colnames(mcols(gr)))
-  
+  #
+  expect_true(istRNAdbGRanges(gr))
+  #
   length <- as.numeric(S4Vectors::mcols(gr)$tRNA_length)
   expect_equal(length,BiocGenerics::width(S4Vectors::mcols(gr)$tRNA_seq))
   expect_equal(length,BiocGenerics::width(S4Vectors::mcols(gr)$tRNA_str))
@@ -48,6 +50,19 @@ test_that("tRNAdbImport:",{
   expect_type(mcols(gff)$tRNAdb_strain, "character")
   expect_type(mcols(gff)$tRNAdb_taxonomyID, "character")
   expect_type(mcols(gff)$tRNAdb_verified, "logical")
+  #
+  mcols(gr)$tRNA_seq <- NULL
+  expect_warning(expect_false(istRNAdbGRanges(gr)))
+  # other general input tests
+  gr <- import.tRNAdb.id(tdbID = "tdbD00000785")
+  expect_true(istRNAdbGRanges(gr))
+  gr <- import.tRNAdb.blast(blastSeq =
+    "GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA")
+  expect_true(istRNAdbGRanges(gr))
+  gr <- import.mttRNAdb(organism = "Bos taurus", aminoacids = c("Phe","Ala"))
+  expect_true(istRNAdbGRanges(gr))
+  gr <- import.mttRNAdb.id(mtdbID = "mtdbD00000900")
+  expect_true(istRNAdbGRanges(gr))
 })
 
 context("input failure and warning tests")
