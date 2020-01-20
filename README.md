@@ -1,4 +1,4 @@
-# tRNAdbImport
+# tRNAdbImport [![Build Status](https://travis-ci.com/FelixErnst/tRNAdbImport.svg?branch=master)](https://travis-ci.com/FelixErnst/tRNAdbImport)
 
 <img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/tRNA/tRNA.png" height="300" align="right">
 
