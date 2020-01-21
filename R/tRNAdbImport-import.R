@@ -35,7 +35,7 @@ NULL
 #' @return a GRanges object containing the information from the tRNA db
 #' 
 #' @importFrom Biostrings DNAStringSet
-#' @importFrom S4Vectors DataFrame
+#' @importFrom S4Vectors DataFrame metadata metadata<-
 #' @importFrom stringr str_detect str_split str_locate_all
 #' 
 #' @export
@@ -67,9 +67,7 @@ import.tRNAdb.id <- function(tdbID, database = c("DNA", "RNA"),
                                             origin = origin)
   args[["submit"]] <- "search ID"
   # get result and return as GRanges
-  res <- .get_trna_db_result(args = args,
-                             dbURL = dbURL,
-                             dbFunction = "Search",
+  res <- .get_trna_db_result(args = args, dbURL = dbURL, dbFunction = "Search",
                              verbose = verbose)
   return(.convert_tRNAdb_result_to_GRanges(res))
 }
@@ -148,9 +146,7 @@ import.tRNAdb <- function(organism = "", strain = "", taxonomyID = "",
                                             origin = origin)
   args[["submit"]] <- "search database"
   # get result and return as GRanges
-  res <- .get_trna_db_result(args = args,
-                             dbURL = dbURL,
-                             dbFunction = "Search",
+  res <- .get_trna_db_result(args = args, dbURL = dbURL, dbFunction = "Search",
                              verbose = verbose)
   return(.convert_tRNAdb_result_to_GRanges(res))
 }
@@ -212,8 +208,12 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                       encode = "form")
   }
   # output blast results if BLAST search
-  if(dbFunction == "Blast" && verbose){
-    message(xml_text(xml2::xml_find_all(content(res), './/tt')))
+  blastRes <- ""
+  if(dbFunction == "Blast"){
+    blastRes <- xml_text(xml2::xml_find_all(content(res), './/tt'))
+    if(verbose){
+      message(blastRes)
+    }
   }
   # check result length
   pageNumbers <- .extract_page_numbers(httr::content(res))
@@ -300,6 +300,11 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                 "tRNAdb_verified")
   df <- df[,c(colOrder,
               colnames(df)[!(colnames(df) %in% colOrder)])]
+  # save metadata
+  df <- S4Vectors::DataFrame(df)
+  if(dbFunction == "Blast"){
+    S4Vectors::metadata(df)$BLAST <- blastRes
+  }
   df
 }
 
@@ -577,7 +582,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   }
   #
   if(!missing(anticodons) && all(!is.na(anticodons)) && all(anticodons != "")){
-    args[["antis"]] <- list(anticodons)
+    args[["antis"]] <- paste(anticodons,collapse = ",")
   }
   #
   if(!missing(reference) && length(reference) == 1L && !is.na(reference) && 

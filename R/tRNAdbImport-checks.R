@@ -45,3 +45,16 @@ setMethod(
   }
   return(TRUE)
 }
+
+#input type checks
+.checkValueValidity <- function(value, checkValues,
+                                .xvalue = assertive::get_name_in_parent(value)){
+  if(!all(value %in% checkValues)){
+    stop("'",gsub("\"","",.xvalue),
+         "' must be one of the following values: '",
+         paste(checkValues, collapse = "', '"),
+         "'.",
+         call. = FALSE)
+  }
+  return(invisible(TRUE))
+}

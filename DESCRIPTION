@@ -1,7 +1,7 @@
 Package: tRNAdbImport
 Title: Importing from tRNAdb and mitotRNAdb as GRanges objects
-Version: 1.5.1
-Date: 2020-01-09
+Version: 1.5.2
+Date: 2020-01-21
 Authors@R: person("Felix G.M.", 
                   "Ernst", 
                   email = "felix.gm.ernst@outlook.com", 
@@ -11,6 +11,7 @@ Description: tRNAdbImport imports the entries of the tRNAdb and mtRNAdb
     (http://trna.bioinf.uni-leipzig.de) as GRanges object.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
+LazyData: false
 biocViews:
     Software,
     Visualization,
@@ -45,7 +46,6 @@ Collate:
     'tRNAdbImport-checks.R'
     'tRNAdbImport-import.R'
     'tRNAdbImport-open.R'
-    'tRNAdbImport-utils.R'
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2
 BugReports: https://github.com/FelixErnst/tRNAdbImport/issues
