@@ -334,7 +334,6 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   organism <- as.character(xml2::xml_find_all(
     xml,
     './/tr[@class="listtabletd"]//td[3]//span[@class="middle"]//a/text()'))
-  organism <- lapply(stringr::str_split(organism,","),"[",1)
   strain <- vapply(stringr::str_split(organism," "),
                    function(s){
                      if(length(s) < 3){
@@ -344,6 +343,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                    },
                    character(1))
   strain[stringr::str_detect(strain,"\\.\\.\\.")] <- ""
+  organism <- lapply(stringr::str_split(organism,","),"[",1)
   organism <- vapply(stringr::str_split(organism," "),
                      function(s){
                        paste(s[c(1,2)],collapse = " ")
@@ -456,20 +456,8 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   aminoacid <- vapply(input[[1]],"[",character(1),4)
   anticodon <- vapply(input[[1]],"[",character(1),5)
   taxonomyID <- vapply(input[[1]],"[",character(1),3)
-  organism <- gsub("_"," ",vapply(input[[1]],"[",character(1),2))
-  strain <- vapply(stringr::str_split(organism," "),
-                   function(s){
-                     if(length(s) < 3){
-                       return("")
-                     }
-                     paste(s[3:length(s)],collapse = " ")
-                   },
-                   character(1))
-  organism <- vapply(stringr::str_split(organism," "),
-                     function(s){
-                       paste(s[c(1,2)],collapse = " ")
-                     },
-                     character(1))
+  organism <- df$tRNAdb_organism
+  strain <- df$tRNAdb_strain
   seq <- input[[2]]
   str <- gsub("\\(",">",gsub("\\)","<",input[[3]]))
   if(any(stringr::str_detect(seq,"_") & df$tRNA_db != "RNA")){
