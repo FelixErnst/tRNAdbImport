@@ -5,3 +5,6 @@ Changes in version 1.1.1 (2019-01-26)
 + added Modstrings and Structstrings dependency
 + depending on the database selected the tRNA sequences will be returned as DNAStringSet or ModRNAStringSet
 + now uses the DotBracketStringSet from the Structstrings package to store the structure information
+
+Changes in version 1.5 (2020-02-05)
++ import of RNA sequences now disregards the insertion character "_"

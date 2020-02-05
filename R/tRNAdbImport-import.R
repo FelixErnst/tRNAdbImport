@@ -409,6 +409,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   }
   if(length(seq_rna) > 0){
     seq_rna <- Modstrings::sanitizeFromtRNAdb(seq_rna)
+    seq_rna <- gsub("_","",seq_rna) # removes the insertion character
     seq_modrna <- Modstrings::ModRNAStringSet(seq_rna)
     seq_rna <- as(seq_modrna,"RNAStringSet")
     seq_dna_test <- as(seq_rna,"DNAStringSet")
