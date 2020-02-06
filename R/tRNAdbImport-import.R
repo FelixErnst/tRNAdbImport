@@ -178,6 +178,8 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
 .convert_tRNAdb_result_to_GRanges <- function(df){
   # convert to DataFrame is not already present
   df <- S4Vectors::DataFrame(df)
+  names(df$tRNA_seq) <- df$tRNAdb_ID
+  names(df$tRNA_str) <- df$tRNAdb_ID
   # construct a valid StringSet object
   df <- .sanitize_sequences(df)
   gr <- GenomicRanges::GRanges(
