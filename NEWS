@@ -8,3 +8,4 @@ Changes in version 1.1.1 (2019-01-26)
 
 Changes in version 1.5 (2020-02-05)
 + import of RNA sequences now disregards the insertion character "_"
++ added tRNAdb_reference and tRNAdb_pmid columns to output

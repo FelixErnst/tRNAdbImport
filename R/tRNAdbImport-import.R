@@ -51,6 +51,78 @@ NULL
 #' import.mttRNAdb.id(mtdbID = "mtdbD00000900")
 NULL
 
+.assemble_args_for_tRNA_db_search <- 
+function(organism, strain, taxonomyID, aminoacids, anticodons, sequences,
+       structures, reference, comment, pubmed, genes, tdbID, blastSequence,
+       database, origin){
+  # base values
+  args <- list(search = 0)
+  #
+  if(!missing(origin) && length(origin) == 1L && !is.na(origin) && origin != ""){
+    args[TRNA_DB_ORIGIN[names(TRNA_DB_ORIGIN) %in% origin]] <- "on"
+  }
+  #
+  if(!missing(database) && length(database) == 1L && !is.na(database) && 
+     database != ""){
+    args[["database"]] <- database
+  }
+  #
+  if(!missing(organism) && length(organism) == 1L && !is.na(organism) && 
+     organism != ""){
+    args[["org"]] <- organism
+  }
+  #
+  if(!missing(strain) && length(strain) == 1L && !is.na(strain) && 
+     strain != ""){
+    args[["strain"]] <- strain
+  }
+  #
+  if(!missing(taxonomyID) && length(taxonomyID) == 1L && !is.na(taxonomyID) && 
+     taxonomyID != ""){
+    args[["TAX_ID"]] <- taxonomyID
+  }
+  #
+  if(!missing(aminoacids) && all(!is.na(aminoacids)) && all(aminoacids != "")){
+    aminoacids <- as.list(aminoacids)
+    names(aminoacids) <- rep("aminoacid",length(aminoacids))
+    args <- append(args,
+                   aminoacids)
+  }
+  #
+  if(!missing(anticodons) && all(!is.na(anticodons)) && all(anticodons != "")){
+    args[["antis"]] <- paste(anticodons,collapse = ",")
+  }
+  #
+  if(!missing(reference) && length(reference) == 1L && !is.na(reference) && 
+     reference != ""){
+    args[["ref"]] <- reference
+  }
+  #
+  if(!missing(comment) && length(comment) == 1L && !is.na(comment) && 
+     comment != ""){
+    args[["comment"]] <- comment
+  }
+  #
+  if(!missing(pubmed) && all(!is.na(pubmed)) && all(pubmed != "")){
+    args[["pubmed"]] <- pubmed
+  }
+  #
+  if(!missing(genes) && all(!is.na(genes)) && all(genes != "")){
+    args[["gen"]] <- genes
+  }
+  #
+  if(!missing(tdbID) && all(!is.na(tdbID)) && all(tdbID != "")){
+    args[["searchID"]] <- tdbID
+  }
+  #
+  if(!missing(blastSequence) && all(!is.na(blastSequence)) && 
+     all(blastSequence != "")){
+    args[["sequence"]] <- blastSequence
+  }
+  #
+  args
+}
+
 #' @rdname import.tRNAdb
 #' @export
 import.tRNAdb.id <- function(tdbID, database = c("DNA", "RNA"),
@@ -71,6 +143,7 @@ import.tRNAdb.id <- function(tdbID, database = c("DNA", "RNA"),
                              verbose = verbose)
   return(.convert_tRNAdb_result_to_GRanges(res))
 }
+
 #' @rdname import.tRNAdb
 #' @export
 import.mttRNAdb.id <- function(mtdbID, dbURL = TRNA_DB_URL_MT,
@@ -150,6 +223,7 @@ import.tRNAdb <- function(organism = "", strain = "", taxonomyID = "",
                              verbose = verbose)
   return(.convert_tRNAdb_result_to_GRanges(res))
 }
+
 #' @rdname import.tRNAdb
 #' @export
 import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
@@ -174,6 +248,8 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                 verbose = verbose)
 }
 
+# helper function --------------------------------------------------------------
+
 # convert results from the tRNA db into a GRanges object
 .convert_tRNAdb_result_to_GRanges <- function(df){
   # convert to DataFrame is not already present
@@ -191,10 +267,10 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   gr
 }
 
-.get_trna_db_result <- function(args, dbURL, dbFunction = c("Search","Blast"),
-                                verbose){
-  dbFunction <- match.arg(dbFunction)
-  # get main result and establish session
+# extracting information from search list --------------------------------------
+
+# get main result and establish session
+.get_trna_db_list <- function(dbURL, dbFunction, args, verbose){
   if(verbose){
     res <- httr::POST(paste0(httr::modify_url(dbURL),
                              "DataOutput/",
@@ -209,7 +285,46 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                       body = args,
                       encode = "form")
   }
-  # output blast results if BLAST search
+  res
+}
+
+.get_trna_db_list_page <- function(dbURL, i, verbose){
+  if(verbose){
+    page <- httr::POST(paste0(httr::modify_url(dbURL),
+                              "DataOutput/Result"),
+                       body = list(position = i),
+                       encode = "form",
+                       httr::verbose())
+  } else {
+    page <- httr::POST(paste0(httr::modify_url(dbURL),
+                              "DataOutput/Result"),
+                       body = list(position = i),
+                       encode = "form")
+  }
+  page
+}
+
+.get_trna_db_list_sequences <- function(dbURL, verbose){
+  if(verbose){
+    sequences <- httr::POST(paste0(httr::modify_url(dbURL),
+                              "DataOutput/Tools"),
+                            body = list("allnormalchecked" = "on",
+                                        "function" = "fastastruct",
+                                        "sel" = ""),
+                            encode = "form",
+                            httr::verbose())
+  } else {
+    sequences <- httr::POST(paste0(httr::modify_url(dbURL),
+                                   "DataOutput/Tools"),
+                            body = list("allnormalchecked" = "on",
+                                        "function" = "fastastruct",
+                                        "sel" = ""),
+                            encode = "form")
+  }
+  sequences
+}
+
+.get_trna_db_list_blast <- function(res, dbFunction, verbose){
   blastRes <- ""
   if(dbFunction == "Blast"){
     blastRes <- xml_text(xml2::xml_find_all(content(res), './/tt'))
@@ -217,6 +332,29 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
       message(blastRes)
     }
   }
+  blastRes
+}
+
+.get_trna_db_result_detailpage <- function(dbURL, id, verbose){
+  if(verbose){
+    detailpage <- httr::POST(paste0(httr::modify_url(dbURL),
+                                    "DataOutput/Result?ID=",id),
+                             httr::verbose())
+  } else {
+    detailpage <- httr::POST(paste0(httr::modify_url(dbURL),
+                                    "DataOutput/Result?ID=",id))
+  }
+  detailpage
+}
+
+#' @importFrom IRanges CharacterList
+.get_trna_db_result <- function(args, dbURL, dbFunction = c("Search","Blast"),
+                                verbose){
+  dbFunction <- match.arg(dbFunction)
+  # get main result and establish session
+  res <- .get_trna_db_list(dbURL, dbFunction, args, verbose)
+  # output blast results if BLAST search
+  blastRes <- .get_trna_db_list_blast(res, dbFunction, verbose)
   # check result length
   pageNumbers <- .extract_page_numbers(httr::content(res))
   if(length(pageNumbers) == 0){
@@ -226,63 +364,49 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   # get all pages of results
   df <- lapply(pageNumbers,
                function(i){
-                 if(verbose){
-                   page <- httr::POST(paste0(httr::modify_url(dbURL),
-                                             "DataOutput/Result"),
-                                      body = list(position = i),
-                                      encode = "form",
-                                      httr::verbose())
-                 } else {
-                   page <- httr::POST(paste0(httr::modify_url(dbURL),
-                                             "DataOutput/Result"),
-                                      body = list(position = i),
-                                      encode = "form")
-                 }
-                 ans <- 
-                   .extract_data_frame_from_xml_per_page(httr::content(page))
-                 ans
+                 page <- .get_trna_db_list_page(dbURL, i, verbose)
+                 .extract_data_frame_from_xml_per_page(httr::content(page))
                })
   df <- do.call(rbind,df)
   df <- df[order(df$tRNAdb_ID),]
   # get sequence and structure information
-  if(verbose){
-    info <- httr::POST(paste0(httr::modify_url(dbURL),
-                              "DataOutput/Tools"),
-                       body = list("allnormalchecked" = "on",
-                                   "function" = "fastastruct",
-                                   "sel" = ""),
-                       encode = "form",
-                       httr::verbose())
-  } else {
-    info <- httr::POST(paste0(httr::modify_url(dbURL),
-                              "DataOutput/Tools"),
-                       body = list("allnormalchecked" = "on",
-                                   "function" = "fastastruct",
-                                   "sel" = ""),
-                       encode = "form")
-  }
-  info <- .extract_tRNAdb_information(httr::content(info),
-                                      df)
-  info <- info[order(info$tRNAdb_ID),]
+  sequences <- .get_trna_db_list_sequences(dbURL, verbose)
+  sequences <- .extract_tRNAdb_sequences(httr::content(sequences), df)
+  sequences <- sequences[order(sequences$tRNAdb_ID),]
+  # get detail pages
+  detailpages <- lapply(df$tRNAdb_ID,
+                        function(id){
+                          details <- 
+                            .get_trna_db_result_detailpage(dbURL, id, verbose)
+                          .extract_tRNAdb_details_information(id, httr::content(details))
+                        })
+  detailpages <- do.call(rbind, detailpages)
   # make sure results match
-  if(!all(info$tRNAdb_ID == df$tRNAdb_ID)){
+  if(!all(sequences$tRNAdb_ID == df$tRNAdb_ID)){
     stop("Function 'fastastruct' returned unmatching list of tRNAdb entries.",
          "\nReason: unmatching tRNAdb ids.",
          call. = FALSE)
   }
-  if(!all(info$tRNA_type == df$tRNA_type)){
+  if(!all(sequences$tRNA_type == df$tRNA_type)){
     stop("Function 'fastastruct' returned unmatching list of tRNAdb entries.",
          "\nReason: unmatching tRNA types.",
          call. = FALSE)
   }
+  if(!all(detailpages$tRNAdb_ID == df$tRNAdb_ID)){
+    stop("Details page returned unmatching list of tRNAdb entries.",
+         "\nReason: unmatching tRNA ids.",
+         call. = FALSE)
+  }
   # merge results
-  df$tRNAdb_organism <- info$tRNAdb_organism
-  df$tRNAdb_strain <- info$tRNAdb_strain
-  df$tRNAdb_taxonomyID <- info$tRNAdb_taxonomyID
-  df$tRNA_anticodon <- info$tRNA_anticodon
-  df$tRNA_seq <- info$tRNA_seq
-  df$tRNA_str <- info$tRNA_str
-  df$tRNA_CCA.end <- info$tRNA_CCA.end
+  df$tRNAdb_organism <- sequences$tRNAdb_organism
+  df$tRNAdb_strain <- sequences$tRNAdb_strain
+  df$tRNAdb_taxonomyID <- sequences$tRNAdb_taxonomyID
+  df$tRNA_anticodon <- sequences$tRNA_anticodon
+  df$tRNA_seq <- sequences$tRNA_seq
+  df$tRNA_str <- sequences$tRNA_str
+  df$tRNA_CCA.end <- sequences$tRNA_CCA.end
+  df$tRNAdb_reference <- IRanges::CharacterList(as.list(detailpages$reference))
+  df$tRNAdb_pmid <- IRanges::CharacterList(as.list(detailpages$pmid))
   # add additional info
   df$no <- seq_len(nrow(df))
   df$tRNA_length <- nchar(df$tRNA_seq)
@@ -299,7 +423,9 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                 "tRNAdb_organism",
                 "tRNAdb_strain",
                 "tRNAdb_taxonomyID",
-                "tRNAdb_verified")
+                "tRNAdb_verified",
+                "tRNAdb_reference",
+                "tRNAdb_pmid")
   df <- df[,c(colOrder,
               colnames(df)[!(colnames(df) %in% colOrder)])]
   # save metadata
@@ -309,6 +435,8 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   }
   df
 }
+
+# html parsing -----------------------------------------------------------------
 
 .extract_page_numbers <- function(xml){
   ans <- unique(xml2::xml_attr(xml2::xml_find_all(
@@ -364,6 +492,27 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                    tRNAdb_verified = verified)
   ans
 }
+
+.extract_tRNAdb_details_information <- function(id, xml){
+  reference <- ""
+  pmid <- ""
+  keys <- xml2::xml_text(xml2::xml_find_all(xml, '//table[@class="entrytable"][1]//div'))
+  refkey <- which(grepl("Reference",keys))
+  pmidkey <- which(grepl("PubMed ID",keys))
+  if(length(refkey)){
+    reference <- trimws(keys[refkey+1L])
+  }
+  if(length(pmidkey)){
+    pmid <- trimws(keys[pmidkey+1L])
+  }
+  ans <- DataFrame(tRNAdb_ID = id,
+                   reference = reference,
+                   pmid = pmid)
+  ans
+}
+
+# formating sequences ----------------------------------------------------------
+
 .pos_letters <- function(x,chrs){
   lapply(chrs,
          function(chr){
@@ -448,7 +597,21 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   df
 }
 
-.extract_tRNAdb_information <- function(input,
+
+# extract trna db information --------------------------------------------------
+
+.has_CCA_end <- function(structures){
+  strList <- getBasePairing(structures)
+  vapply(strList,
+         function(str){
+           end <- max(str$pos)
+           # the last three nucleotides must be unpaired
+           all(str[str$pos %in% (end-2):end,]$forward == 0)
+         },
+         logical(1))
+}
+
+.extract_tRNAdb_sequences <- function(input,
                                         df){
   input <- stringr::str_split(input,"\n")[[1]]
   input <- split(input[seq_len(length(input)-1)],
@@ -523,88 +686,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   ans
 }
 
-.has_CCA_end <- function(structures){
-  strList <- getBasePairing(structures)
-  vapply(strList,
-         function(str){
-           end <- max(str$pos)
-           # the last three nucleotides must be unpaired
-           all(str[str$pos %in% (end-2):end,]$forward == 0)
-         },
-         logical(1))
-}
-
-.assemble_args_for_tRNA_db_search <- 
-  function(organism, strain, taxonomyID, aminoacids, anticodons, sequences,
-           structures, reference, comment, pubmed, genes, tdbID, blastSequence,
-           database, origin){
-  # base values
-  args <- list(search = 0)
-  #
-  if(!missing(origin) && length(origin) == 1L && !is.na(origin) && origin != ""){
-    args[TRNA_DB_ORIGIN[names(TRNA_DB_ORIGIN) %in% origin]] <- "on"
-  }
-  #
-  if(!missing(database) && length(database) == 1L && !is.na(database) && 
-     database != ""){
-    args[["database"]] <- database
-  }
-  #
-  if(!missing(organism) && length(organism) == 1L && !is.na(organism) && 
-     organism != ""){
-    args[["org"]] <- organism
-  }
-  #
-  if(!missing(strain) && length(strain) == 1L && !is.na(strain) && 
-     strain != ""){
-    args[["strain"]] <- strain
-  }
-  #
-  if(!missing(taxonomyID) && length(taxonomyID) == 1L && !is.na(taxonomyID) && 
-     taxonomyID != ""){
-    args[["TAX_ID"]] <- taxonomyID
-  }
-  #
-  if(!missing(aminoacids) && all(!is.na(aminoacids)) && all(aminoacids != "")){
-    aminoacids <- as.list(aminoacids)
-    names(aminoacids) <- rep("aminoacid",length(aminoacids))
-    args <- append(args,
-                   aminoacids)
-  }
-  #
-  if(!missing(anticodons) && all(!is.na(anticodons)) && all(anticodons != "")){
-    args[["antis"]] <- paste(anticodons,collapse = ",")
-  }
-  #
-  if(!missing(reference) && length(reference) == 1L && !is.na(reference) && 
-     reference != ""){
-    args[["ref"]] <- reference
-  }
-  #
-  if(!missing(comment) && length(comment) == 1L && !is.na(comment) && 
-     comment != ""){
-    args[["comment"]] <- comment
-  }
-  #
-  if(!missing(pubmed) && all(!is.na(pubmed)) && all(pubmed != "")){
-    args[["pubmed"]] <- pubmed
-  }
-  #
-  if(!missing(genes) && all(!is.na(genes)) && all(genes != "")){
-    args[["gen"]] <- genes
-  }
-  #
-  if(!missing(tdbID) && all(!is.na(tdbID)) && all(tdbID != "")){
-    args[["searchID"]] <- tdbID
-  }
-  #
-  if(!missing(blastSequence) && all(!is.na(blastSequence)) && 
-     all(blastSequence != "")){
-    args[["sequence"]] <- blastSequence
-  }
-  #
-  args
-}
+# convert result to GFF format compatible result
 
 #' @rdname import.tRNAdb
 #' @export

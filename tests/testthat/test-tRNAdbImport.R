@@ -8,7 +8,8 @@ test_that("tRNAdbImport:",{
   expect_equal(c("no","tRNA_length","tRNA_type","tRNA_anticodon","tRNA_seq",
                  "tRNA_str","tRNA_CCA.end","tRNAdb","tRNAdb_ID",
                  "tRNAdb_organism","tRNAdb_strain","tRNAdb_taxonomyID",
-                 "tRNAdb_verified"),colnames(mcols(gr)))
+                 "tRNAdb_verified", "tRNAdb_reference", "tRNAdb_pmid"),
+               colnames(mcols(gr)))
   #
   expect_true(istRNAdbGRanges(gr))
   #
