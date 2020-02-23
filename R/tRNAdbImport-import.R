@@ -51,6 +51,14 @@ NULL
 #' import.mttRNAdb.id(mtdbID = "mtdbD00000900")
 NULL
 
+#' @rdname import.tRNAdb
+#' @export
+TRNA_DB_URL <- "http://trna.bioinf.uni-leipzig.de/"
+#' @rdname import.tRNAdb
+#' @export
+TRNA_DB_URL_MT <- "http://mttrna.bioinf.uni-leipzig.de/mt"
+
+
 .assemble_args_for_tRNA_db_search <- 
 function(organism, strain, taxonomyID, aminoacids, anticodons, sequences,
        structures, reference, comment, pubmed, genes, tdbID, blastSequence,

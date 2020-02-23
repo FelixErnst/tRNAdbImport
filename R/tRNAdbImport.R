@@ -57,10 +57,3 @@ TRNADB_FEATURES <- c(
   "tRNAdb_taxonomyID",
   "tRNAdb_verified"
 )
-
-#' @rdname import.tRNAdb
-#' @export
-TRNA_DB_URL <- "http://trna.bioinf.uni-leipzig.de/"
-#' @rdname import.tRNAdb
-#' @export
-TRNA_DB_URL_MT <- "http://mttrna.bioinf.uni-leipzig.de/mt"
