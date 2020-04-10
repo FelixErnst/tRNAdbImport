@@ -3,6 +3,7 @@
 <!-- badges: start -->
 ![R-CMD-check](https://github.com/FelixErnst/tRNAdbImport/workflows/R-CMD-check/badge.svg)
 [![codecov](https://codecov.io/gh/FelixErnst/tRNAdbImport/branch/master/graph/badge.svg)](https://codecov.io/gh/FelixErnst/tRNAdbImport)
+[![BioC Years](https://bioconductor.org/shields/years-in-bioc/tRNAdbImport.svg)](https://doi.org/doi:10.18129/B9.bioc.tRNAdbImport)
 <!-- badges: end -->
 
 The tRNAdb and mttRNAdb ([Juehling et al. 2009](#Literature)) is a compilation of
