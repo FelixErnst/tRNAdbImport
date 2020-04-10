@@ -1,7 +1,8 @@
 # tRNAdbImport <img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/tRNA/tRNA.png" height="200" align="right">
 
 <!-- badges: start -->
-[![Build Status](https://travis-ci.com/FelixErnst/tRNAdbImport.svg?branch=master)](https://travis-ci.com/FelixErnst/tRNAdbImport) [![codecov](https://codecov.io/gh/FelixErnst/tRNAdbImport/branch/master/graph/badge.svg)](https://codecov.io/gh/FelixErnst/tRNAdbImport)
+![R-CMD-check](https://github.com/FelixErnst/tRNAdbImport/workflows/R-CMD-check/badge.svg)
+[![codecov](https://codecov.io/gh/FelixErnst/tRNAdbImport/branch/master/graph/badge.svg)](https://codecov.io/gh/FelixErnst/tRNAdbImport)
 <!-- badges: end -->
 
 The tRNAdb and mttRNAdb ([Juehling et al. 2009](#Literature)) is a compilation of
