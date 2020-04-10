@@ -1,10 +1,8 @@
 ---
-title: "Importing from to tRNAdb and mitotRNAdb as GRanges"
+title: "Importing from to tRNAdb and mitotRNAdb as `GRanges`"
 author: "Felix G.M. Ernst"
 date: "`r Sys.Date()`"
 package: tRNAdbImport
-abstract: >
-  Example of importing tRNAdb output as GRanges
 output:
   BiocStyle::html_document:
     toc: true
@@ -31,7 +29,7 @@ Using `tRNAdbImport` the tRNAdb can be accessed as outlined on the website
 [`r tRNAdbImport::TRNA_DB_URL`](`r tRNAdbImport::TRNA_DB_URL`) and the results
 are returned as a `GRanges` object.
 
-# Importing as GRanges
+# Importing as `GRanges`
 
 ```{r, echo=FALSE}
 suppressPackageStartupMessages(
@@ -70,7 +68,7 @@ gr <- import.mttRNAdb.id(mtdbID = gr[1L]$tRNAdb_ID)
 istRNAdbGRanges(gr)
 ```
 
-# Importing as GRanges from the RNA database
+# Importing as `GRanges` from the RNA database
 
 The tRNAdb offers two different sets of data, one containing DNA sequences and
 one containing RNA sequences. Depending on the database selected, `DNA` as 
@@ -112,8 +110,12 @@ suppressPackageStartupMessages({
 ```{r}
 library(Biostrings)
 library(rtracklayer)
+# saving the tRAN sequences as fasta file
 writeXStringSet(gr$tRNA_seq, filepath = tempfile())
+# converting tRNAdb information to GFF compatible values
 gff <- tRNAdb2GFF(gr)
+gff
+# Saving the information as gff3 file
 export.gff3(gff, con = tempfile())
 ```
 

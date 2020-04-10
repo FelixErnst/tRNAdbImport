@@ -1,6 +1,8 @@
-# tRNAdbImport [![Build Status](https://travis-ci.com/FelixErnst/tRNAdbImport.svg?branch=master)](https://travis-ci.com/FelixErnst/tRNAdbImport) [![codecov](https://codecov.io/gh/FelixErnst/tRNAdbImport/branch/master/graph/badge.svg)](https://codecov.io/gh/FelixErnst/tRNAdbImport)
+# tRNAdbImport <img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/tRNA/tRNA.png" height="200" align="right">
 
-<img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/tRNA/tRNA.png" height="300" align="right">
+<!-- badges: start -->
+[![Build Status](https://travis-ci.com/FelixErnst/tRNAdbImport.svg?branch=master)](https://travis-ci.com/FelixErnst/tRNAdbImport) [![codecov](https://codecov.io/gh/FelixErnst/tRNAdbImport/branch/master/graph/badge.svg)](https://codecov.io/gh/FelixErnst/tRNAdbImport)
+<!-- badges: end -->
 
 The tRNAdb and mttRNAdb ([Juehling et al. 2009](#Literature)) is a compilation of
 tRNA sequences and tRNA genes. It is a follow up version of the database of
