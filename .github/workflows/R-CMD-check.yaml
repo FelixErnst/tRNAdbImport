@@ -19,7 +19,7 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: '3.6'}
-          - {os: windows-latest, r: 'devel'}
+          #- {os: windows-latest, r: 'devel'}
           - {os: macOS-latest, r: '3.6'}
           # xml2 is not avilable for macOS devel
           #- {os: macOS-latest, r: 'devel'}
