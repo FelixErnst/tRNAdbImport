@@ -48,7 +48,7 @@ setMethod(
 
 #input type checks
 .checkValueValidity <- function(value, checkValues,
-                                .xvalue = assertive::get_name_in_parent(value)){
+                                .xvalue = .get_name_in_parent(value)){
   if(!all(value %in% checkValues)){
     stop("'",gsub("\"","",.xvalue),
          "' must be one of the following values: '",
@@ -57,4 +57,12 @@ setMethod(
          call. = FALSE)
   }
   return(invisible(TRUE))
+}
+
+.get_name_in_parent <- function(x) {
+  .safe_deparse(do.call(substitute, list(substitute(x), parent.frame())))
+}
+
+.safe_deparse <- function (expr, ...) {
+  paste0(deparse(expr, width.cutoff = 500L, ...), collapse = "")
 }

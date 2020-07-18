@@ -12,7 +12,11 @@
 \alias{TRNA_DB_URL}
 \alias{TRNA_DB_URL_MT}
 \title{Importing information from the tRNA db as GRanges object}
-\format{An object of class \code{character} of length 1.}
+\format{
+An object of class \code{character} of length 1.
+
+An object of class \code{character} of length 1.
+}
 \usage{
 TRNA_DB_URL
 

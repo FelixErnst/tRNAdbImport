@@ -137,8 +137,12 @@ import.tRNAdb.id <- function(tdbID, database = c("DNA", "RNA"),
                              origin = c("allothers", "plastid", "mitochondrial"),
                              dbURL = TRNA_DB_URL, verbose = FALSE){
   # input check
-  assertive::assert_is_a_bool(verbose)
-  assertive::assert_all_are_non_empty_character(tdbID)
+  if(!.is_a_bool(verbose)){
+    stop("'verbose' must be TRUE or FALSE")
+  }
+  if(!.is_non_empty_character(tdbID)){
+    stop("'tdbID' must contain only non empty character values.")
+  }
   database <- match.arg(database[1], c(TRNA_DB_TYPE,NA_character_))
   origin <- match.arg(origin[1], c(names(TRNA_DB_ORIGIN),NA_character_))
   # assemble arguments
@@ -169,9 +173,13 @@ import.tRNAdb.blast <- function(blastSeq, database = c("DNA",  "RNA"),
                                 origin = c("allothers", "plastid", "mitochondrial"),
                                 dbURL = TRNA_DB_URL, verbose = FALSE){
   # input check
-  assertive::assert_is_a_bool(verbose)
+  if(!.is_a_bool(verbose)){
+    stop("'verbose' must be TRUE or FALSE")
+  }
   blastSeq <- as.character(blastSeq) # in case it is a single DNAString*
-  assertive::assert_is_a_non_empty_string(blastSeq)
+  if(!.is_non_empty_string(blastSeq)){
+    stop("'blastSeq' must be a single non empty character value.")
+  }
   database <- match.arg(database[1], c(TRNA_DB_TYPE,NA_character_))
   origin <- match.arg(origin[1], c(names(TRNA_DB_ORIGIN),NA_character_))
   # assemble arguments
@@ -198,7 +206,9 @@ import.tRNAdb <- function(organism = "", strain = "", taxonomyID = "",
                           origin = c("allothers", "plastid", "mitochondrial"),
                           dbURL = TRNA_DB_URL, verbose = FALSE){
   # input check
-  assertive::assert_is_a_bool(verbose)
+  if(!.is_a_bool(verbose)){
+    stop("'verbose' must be TRUE or FALSE")
+  }
   .checkValueValidity(
     aminoacids, 
     c(Biostrings::AMINO_ACID_CODE[names(Biostrings::AMINO_ACID_CODE) %in% 

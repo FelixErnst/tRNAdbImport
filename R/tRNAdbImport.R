@@ -28,7 +28,6 @@
 NULL
 
 #' @import methods
-#' @import assertive
 #' @import httr
 #' @import xml2
 #' @import GenomicRanges
