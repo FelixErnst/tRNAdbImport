@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tRNAdbImport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.1</span>
       </span>
     </div>
 
@@ -120,63 +120,63 @@
     <p>title</p>
     </div>
 
-    <pre class="usage"><span class='no'>TRNA_DB_URL</span>
+    <pre class="usage"><span class='kw'>TRNA_DB_URL</span>
 
-<span class='no'>TRNA_DB_URL_MT</span>
+<span class='kw'>TRNA_DB_URL_MT</span>
 
 <span class='fu'>import.tRNAdb.id</span>(
-  <span class='no'>tdbID</span>,
-  <span class='kw'>database</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"DNA"</span>, <span class='st'>"RNA"</span>),
-  <span class='kw'>origin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"allothers"</span>, <span class='st'>"plastid"</span>, <span class='st'>"mitochondrial"</span>),
-  <span class='kw'>dbURL</span> <span class='kw'>=</span> <span class='no'>TRNA_DB_URL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>tdbID</span>,
+  database = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"DNA"</span>, <span class='st'>"RNA"</span>),
+  origin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"allothers"</span>, <span class='st'>"plastid"</span>, <span class='st'>"mitochondrial"</span>),
+  dbURL = <span class='kw'>TRNA_DB_URL</span>,
+  verbose = <span class='fl'>FALSE</span>
 )
 
-<span class='fu'>import.mttRNAdb.id</span>(<span class='no'>mtdbID</span>, <span class='kw'>dbURL</span> <span class='kw'>=</span> <span class='no'>TRNA_DB_URL_MT</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>import.mttRNAdb.id</span>(<span class='kw'>mtdbID</span>, dbURL = <span class='kw'>TRNA_DB_URL_MT</span>, verbose = <span class='fl'>FALSE</span>)
 
 <span class='fu'>import.tRNAdb.blast</span>(
-  <span class='no'>blastSeq</span>,
-  <span class='kw'>database</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"DNA"</span>, <span class='st'>"RNA"</span>),
-  <span class='kw'>origin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"allothers"</span>, <span class='st'>"plastid"</span>, <span class='st'>"mitochondrial"</span>),
-  <span class='kw'>dbURL</span> <span class='kw'>=</span> <span class='no'>TRNA_DB_URL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>blastSeq</span>,
+  database = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"DNA"</span>, <span class='st'>"RNA"</span>),
+  origin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"allothers"</span>, <span class='st'>"plastid"</span>, <span class='st'>"mitochondrial"</span>),
+  dbURL = <span class='kw'>TRNA_DB_URL</span>,
+  verbose = <span class='fl'>FALSE</span>
 )
 
 <span class='fu'>import.tRNAdb</span>(
-  <span class='kw'>organism</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>strain</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>taxonomyID</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>aminoacids</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>anticodons</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>sequences</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>structures</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>comment</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>pubmed</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>genes</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>database</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"DNA"</span>, <span class='st'>"RNA"</span>),
-  <span class='kw'>origin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"allothers"</span>, <span class='st'>"plastid"</span>, <span class='st'>"mitochondrial"</span>),
-  <span class='kw'>dbURL</span> <span class='kw'>=</span> <span class='no'>TRNA_DB_URL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  organism = <span class='st'>""</span>,
+  strain = <span class='st'>""</span>,
+  taxonomyID = <span class='st'>""</span>,
+  aminoacids = <span class='st'>""</span>,
+  anticodons = <span class='st'>""</span>,
+  sequences = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  structures = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  reference = <span class='st'>""</span>,
+  comment = <span class='st'>""</span>,
+  pubmed = <span class='st'>""</span>,
+  genes = <span class='st'>""</span>,
+  database = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"DNA"</span>, <span class='st'>"RNA"</span>),
+  origin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"allothers"</span>, <span class='st'>"plastid"</span>, <span class='st'>"mitochondrial"</span>),
+  dbURL = <span class='kw'>TRNA_DB_URL</span>,
+  verbose = <span class='fl'>FALSE</span>
 )
 
 <span class='fu'>import.mttRNAdb</span>(
-  <span class='kw'>organism</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>strain</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>taxonomyID</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>aminoacids</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>anticodons</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>sequences</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>structures</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>comment</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>pubmed</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>genes</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>dbURL</span> <span class='kw'>=</span> <span class='no'>TRNA_DB_URL_MT</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  organism = <span class='st'>""</span>,
+  strain = <span class='st'>""</span>,
+  taxonomyID = <span class='st'>""</span>,
+  aminoacids = <span class='st'>""</span>,
+  anticodons = <span class='st'>""</span>,
+  sequences = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  structures = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  reference = <span class='st'>""</span>,
+  comment = <span class='st'>""</span>,
+  pubmed = <span class='st'>""</span>,
+  genes = <span class='st'>""</span>,
+  dbURL = <span class='kw'>TRNA_DB_URL_MT</span>,
+  verbose = <span class='fl'>FALSE</span>
 )
 
-<span class='fu'>tRNAdb2GFF</span>(<span class='no'>input</span>)</pre>
+<span class='fu'>tRNAdb2GFF</span>(<span class='kw'>input</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -264,13 +264,14 @@ search. Please use the <code>\(\)</code> or <code>&gt;&lt;</code> dot bracket an
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
     <p>An object of class <code>character</code> of length 1.</p>
+<p>An object of class <code>character</code> of length 1.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a GRanges object containing the information from the tRNA db</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>import.tRNAdb</span>(<span class='kw'>organism</span> <span class='kw'>=</span> <span class='st'>"Saccharomyces cerevisiae"</span>,
-              <span class='kw'>aminoacids</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Phe"</span>,<span class='st'>"Ala"</span>))</div><div class='output co'>#&gt; GRanges object with 13 ranges and 15 metadata columns:
+    <pre class="examples"><div class='input'><span class='fu'>import.tRNAdb</span>(organism = <span class='st'>"Saccharomyces cerevisiae"</span>,
+              aminoacids = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Phe"</span>,<span class='st'>"Ala"</span>))</div><div class='output co'>#&gt; GRanges object with 13 ranges and 15 metadata columns:
 #&gt;            seqnames    ranges strand |        no tRNA_length   tRNA_type
 #&gt;               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
 #&gt;    [1] tdbD00000218      1-73      * |         1          73         Ala
@@ -350,7 +351,7 @@ search. Please use the <code>\(\)</code> or <code>&gt;&lt;</code> dot bracket an
 #&gt;   [12]         9023104
 #&gt;   [13]         9023104
 #&gt;   -------
-#&gt;   seqinfo: 13 sequences from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.tRNAdb.id</span>(<span class='kw'>tdbID</span> <span class='kw'>=</span> <span class='st'>"tdbD00000785"</span>)</div><div class='output co'>#&gt; GRanges object with 1 range and 15 metadata columns:
+#&gt;   seqinfo: 13 sequences from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.tRNAdb.id</span>(tdbID = <span class='st'>"tdbD00000785"</span>)</div><div class='output co'>#&gt; GRanges object with 1 range and 15 metadata columns:
 #&gt;           seqnames    ranges strand |        no tRNA_length   tRNA_type
 #&gt;              &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
 #&gt;   [1] tdbD00000785      1-73      * |         1          73         Phe
@@ -370,7 +371,7 @@ search. Please use the <code>\(\)</code> or <code>&gt;&lt;</code> dot bracket an
 #&gt;       &lt;CharacterList&gt;
 #&gt;   [1]                
 #&gt;   -------
-#&gt;   seqinfo: 1 sequence from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.tRNAdb.blast</span>(<span class='kw'>blastSeq</span> <span class='kw'>=</span>
+#&gt;   seqinfo: 1 sequence from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.tRNAdb.blast</span>(blastSeq =
 <span class='st'>"GCGGATTTAGCTCAGTTGGGAGAGCGCCAGACTGAAGATCTGGAGGTCCTGTGTTCGATCCACAGAATTCGCA"</span>)</div><div class='output co'>#&gt; GRanges object with 10 ranges and 15 metadata columns:
 #&gt;            seqnames    ranges strand |        no tRNA_length   tRNA_type
 #&gt;               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
@@ -445,8 +446,8 @@ search. Please use the <code>\(\)</code> or <code>&gt;&lt;</code> dot bracket an
 #&gt;    [9]                
 #&gt;   [10]                
 #&gt;   -------
-#&gt;   seqinfo: 10 sequences from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.mttRNAdb</span>(<span class='kw'>organism</span> <span class='kw'>=</span> <span class='st'>"Bos taurus"</span>,
-                <span class='kw'>aminoacids</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Phe"</span>,<span class='st'>"Ala"</span>))</div><div class='output co'>#&gt; GRanges object with 2 ranges and 15 metadata columns:
+#&gt;   seqinfo: 10 sequences from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.mttRNAdb</span>(organism = <span class='st'>"Bos taurus"</span>,
+                aminoacids = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Phe"</span>,<span class='st'>"Ala"</span>))</div><div class='output co'>#&gt; GRanges object with 2 ranges and 15 metadata columns:
 #&gt;            seqnames    ranges strand |        no tRNA_length   tRNA_type
 #&gt;               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
 #&gt;   [1] mtdbD00000900      1-67      * |         1          67         Phe
@@ -464,7 +465,7 @@ search. Please use the <code>\(\)</code> or <code>&gt;&lt;</code> dot bracket an
 #&gt;   [1]              9913           FALSE NC_006853.1 (NCBI)                
 #&gt;   [2]              9913           FALSE NC_006853.1 (NCBI)                
 #&gt;   -------
-#&gt;   seqinfo: 2 sequences from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.mttRNAdb.id</span>(<span class='kw'>mtdbID</span> <span class='kw'>=</span> <span class='st'>"mtdbD00000900"</span>)</div><div class='output co'>#&gt; GRanges object with 1 range and 15 metadata columns:
+#&gt;   seqinfo: 2 sequences from an unspecified genome; no seqlengths</div><div class='input'><span class='fu'>import.mttRNAdb.id</span>(mtdbID = <span class='st'>"mtdbD00000900"</span>)</div><div class='output co'>#&gt; GRanges object with 1 range and 15 metadata columns:
 #&gt;            seqnames    ranges strand |        no tRNA_length   tRNA_type
 #&gt;               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;
 #&gt;   [1] mtdbD00000900      1-67      * |         1          67         Phe
