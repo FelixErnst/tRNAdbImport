@@ -22,8 +22,10 @@ NULL
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' open_tdbID("tdbD00000785")
 #' open_mtdbID("mtdbD00000907")
+#' }
 open_tdbID <- function(tdbID, dbURL = TRNA_DB_URL){
   utils::browseURL(paste0(httr::modify_url(dbURL), "DataOutput/Result?ID=",
                           tdbID))
