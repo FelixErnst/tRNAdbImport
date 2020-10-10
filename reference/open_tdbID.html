@@ -74,19 +74,13 @@ the entry right away without a session ID. open twice upon first use." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tRNAdbImport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/tRNAdbImport.html">Get started</a>
 </li>
 <li>
@@ -124,9 +118,9 @@ tRNAdb entry in a browser. Please note, that the tRNAdb server does not show
 the entry right away without a session ID. open twice upon first use.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>open_tdbID</span>(<span class='kw'>tdbID</span>, dbURL = <span class='kw'>TRNA_DB_URL</span>)
+    <pre class="usage"><span class='fu'>open_tdbID</span><span class='op'>(</span><span class='va'>tdbID</span>, dbURL <span class='op'>=</span> <span class='va'>TRNA_DB_URL</span><span class='op'>)</span>
 
-<span class='fu'>open_mtdbID</span>(<span class='kw'>mtdbID</span>, dbURL = <span class='kw'>TRNA_DB_URL_MT</span>)</pre>
+<span class='fu'>open_mtdbID</span><span class='op'>(</span><span class='va'>mtdbID</span>, dbURL <span class='op'>=</span> <span class='va'>TRNA_DB_URL_MT</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,8 +144,9 @@ the entry right away without a session ID. open twice upon first use.</p>
     <p>opens a window in a default browser for tRNAdb entry selected</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>open_tdbID</span>(<span class='st'>"tdbD00000785"</span>)
-<span class='fu'>open_mtdbID</span>(<span class='st'>"mtdbD00000907"</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>open_tdbID</span><span class='op'>(</span><span class='st'>"tdbD00000785"</span><span class='op'>)</span>
+<span class='fu'>open_mtdbID</span><span class='op'>(</span><span class='st'>"mtdbD00000907"</span><span class='op'>)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -167,7 +162,7 @@ the entry right away without a session ID. open twice upon first use.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
