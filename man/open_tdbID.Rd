@@ -25,6 +25,8 @@ tRNAdb entry in a browser. Please note, that the tRNAdb server does not show
 the entry right away without a session ID. open twice upon first use.
 }
 \examples{
-open_tdbID("tdbD00000785")
-open_mtdbID("mtdbD00000907")
+if(interactive()){
+  open_tdbID("tdbD00000785")
+  open_mtdbID("mtdbD00000907")
+}
 }
