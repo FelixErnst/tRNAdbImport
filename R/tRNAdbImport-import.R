@@ -29,7 +29,7 @@ NULL
 #' @param database "RNA" or "DNA"
 #' @param origin one ore more of "plastid", "mitochondrial" or "allothers"
 #' @param dbURL the URL of the tRNA db
-#' @param verbose whether to report verbose information from the httr calls
+#' @param verbose whether to report verbose information from the httr2 calls
 #' @param input a GRanges object which passes the \code{istRNAdbGRanges} check
 #'
 #' @return a GRanges object containing the information from the tRNA db
@@ -272,6 +272,11 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
 .convert_tRNAdb_result_to_GRanges <- function(df){
   # convert to DataFrame is not already present
   df <- S4Vectors::DataFrame(df)
+  # if empty result return empty GRanges
+  if(nrow(df) == 0L){
+    return(GenomicRanges::GRanges())
+  }
+  # 
   names(df$tRNA_seq) <- df$tRNAdb_ID
   names(df$tRNA_str) <- df$tRNAdb_ID
   # construct a valid StringSet object
@@ -287,65 +292,75 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
 
 # extracting information from search list --------------------------------------
 
-# get main result and establish session
-.get_trna_db_list <- function(dbURL, dbFunction, args, verbose){
+
+.handle_trna_db_connection_error <- function(res){
+  
+  
+}
+
+.get_verbose <- function(verbose){
   if(verbose){
-    res <- httr::POST(paste0(httr::modify_url(dbURL),
-                             "DataOutput/",
-                             dbFunction),
-                      body = args,
-                      encode = "form",
-                      httr::verbose())
+    2L
   } else {
-    res <- httr::POST(paste0(httr::modify_url(dbURL),
-                             "DataOutput/",
-                             dbFunction),
-                      body = args,
-                      encode = "form")
+    0L
+  }
+}
+
+#' @importFrom httr2 request req_method req_body_form req_error req_perform 
+#'    url_build
+.get_trna_db <- function(url, body = list(), verbose){
+  req <- httr2::request(httr2::url_build(url))
+  req <- httr2::req_method(req, "POST")
+  req <- do.call(httr2::req_body_form, c(list(req),body))
+  req <- httr2::req_error(req)
+  res <- try(do.call(httr2::req_perform, 
+                     list(req, verbosity = .get_verbose(verbose))), 
+             silent = TRUE)
+  if(is(res,"try-error")){
+    if(verbose){
+      warning(res, call. = FALSE)
+    } else {
+      warning("tRNAdb Server seems to be not available.", call. = FALSE)
+    }
+    return(httr2::response(status_code = 503L, 
+                           url = httr2::url_build(url), 
+                           method = "POST",
+                           headers = c("Content-Type: text/html")))
   }
   res
 }
 
+# get main result and establish session
+.get_trna_db_list <- function(dbURL, dbFunction, args, verbose){
+  dbURL$path <- paste0(dbURL$path, "DataOutput/",  dbFunction)
+  .get_trna_db(url = dbURL,
+               body = args,
+               verbose = verbose)
+}
+
 .get_trna_db_list_page <- function(dbURL, i, verbose){
-  if(verbose){
-    page <- httr::POST(paste0(httr::modify_url(dbURL),
-                              "DataOutput/Result"),
-                       body = list(position = i),
-                       encode = "form",
-                       httr::verbose())
-  } else {
-    page <- httr::POST(paste0(httr::modify_url(dbURL),
-                              "DataOutput/Result"),
-                       body = list(position = i),
-                       encode = "form")
-  }
-  page
+  dbURL$path <- paste0(dbURL$path, "DataOutput/Result")
+  .get_trna_db(url = dbURL,
+               body = list(position = i),
+               verbose = verbose)
 }
 
 .get_trna_db_list_sequences <- function(dbURL, verbose){
-  if(verbose){
-    sequences <- httr::POST(paste0(httr::modify_url(dbURL),
-                              "DataOutput/Tools"),
-                            body = list("allnormalchecked" = "on",
-                                        "function" = "fastastruct",
-                                        "sel" = ""),
-                            encode = "form",
-                            httr::verbose())
-  } else {
-    sequences <- httr::POST(paste0(httr::modify_url(dbURL),
-                                   "DataOutput/Tools"),
-                            body = list("allnormalchecked" = "on",
-                                        "function" = "fastastruct",
-                                        "sel" = ""),
-                            encode = "form")
-  }
-  sequences
+  dbURL$path <- paste0(dbURL$path, "DataOutput/Tools")
+  .get_trna_db(url = dbURL,
+               body = list("allnormalchecked" = "on",
+                           "function" = "fastastruct",
+                           "sel" = ""),
+               verbose = verbose)
 }
 
+#' @importFrom httr2 resp_body_html
+#' @importFrom xml2 xml_text xml_find_all
 .get_trna_db_list_blast <- function(res, dbFunction, verbose){
   blastRes <- ""
   if(dbFunction == "Blast"){
-    blastRes <- xml_text(xml2::xml_find_all(content(res), './/tt'))
+    blastRes <- xml2::xml_text(xml2::xml_find_all(
+      httr2::resp_body_html(res), './/tt'))
     if(verbose){
       message(blastRes)
     }
@@ -353,28 +368,29 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   blastRes
 }
 
+#' @importFrom httr2 url_parse
 .get_trna_db_result_detailpage <- function(dbURL, id, verbose){
-  if(verbose){
-    detailpage <- httr::POST(paste0(httr::modify_url(dbURL),
-                                    "DataOutput/Result?ID=",id),
-                             httr::verbose())
-  } else {
-    detailpage <- httr::POST(paste0(httr::modify_url(dbURL),
-                                    "DataOutput/Result?ID=",id))
-  }
-  detailpage
+  dbURL$path <- paste0(dbURL$path, "DataOutput/Result")
+  dbURL$query <- list(ID = id)
+  .get_trna_db(dbURL,
+               verbose = verbose)
 }
 
+#' @importFrom httr2 resp_body_html url_parse resp_is_error
 #' @importFrom IRanges CharacterList
 .get_trna_db_result <- function(args, dbURL, dbFunction = c("Search","Blast"),
                                 verbose){
+  dbURL <- httr2::url_parse(dbURL)
   dbFunction <- match.arg(dbFunction)
   # get main result and establish session
   res <- .get_trna_db_list(dbURL, dbFunction, args, verbose)
+  if(httr2::resp_is_error(res)){
+    return(S4Vectors::DataFrame())
+  }
   # output blast results if BLAST search
   blastRes <- .get_trna_db_list_blast(res, dbFunction, verbose)
   # check result length
-  pageNumbers <- .extract_page_numbers(httr::content(res))
+  pageNumbers <- .extract_page_numbers(httr2::resp_body_html(res))
   if(length(pageNumbers) == 0){
     stop("No results found.",
          call. = FALSE)
@@ -383,20 +399,20 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   df <- lapply(pageNumbers,
                function(i){
                  page <- .get_trna_db_list_page(dbURL, i, verbose)
-                 .extract_data_frame_from_xml_per_page(httr::content(page))
+                 .extract_data_frame_from_xml_per_page(httr2::resp_body_html(page))
                })
   df <- do.call(rbind,df)
   df <- df[order(df$tRNAdb_ID),]
   # get sequence and structure information
   sequences <- .get_trna_db_list_sequences(dbURL, verbose)
-  sequences <- .extract_tRNAdb_sequences(httr::content(sequences), df)
+  sequences <- .extract_tRNAdb_sequences(httr2::resp_body_html(sequences), df)
   sequences <- sequences[order(sequences$tRNAdb_ID),]
   # get detail pages
   detailpages <- lapply(df$tRNAdb_ID,
                         function(id){
                           details <- 
                             .get_trna_db_result_detailpage(dbURL, id, verbose)
-                          .extract_tRNAdb_details_information(id, httr::content(details))
+                          .extract_tRNAdb_details_information(id, httr2::resp_body_html(details))
                         })
   detailpages <- do.call(rbind, detailpages)
   # make sure results match
@@ -456,6 +472,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
 
 # html parsing -----------------------------------------------------------------
 
+#' @importFrom xml2 xml_attr xml_find_all
 .extract_page_numbers <- function(xml){
   ans <- unique(xml2::xml_attr(xml2::xml_find_all(
     xml,
@@ -464,6 +481,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   ans
 }
 
+#' @importFrom xml2 xml_attr xml_find_all
 .extract_data_frame_from_xml_per_page <- function(xml){
   ids <- xml2::xml_attr(xml2::xml_find_all(
     xml,
@@ -511,6 +529,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   ans
 }
 
+#' @importFrom xml2 xml_text xml_find_all
 .extract_tRNAdb_details_information <- function(id, xml){
   reference <- ""
   pmid <- ""

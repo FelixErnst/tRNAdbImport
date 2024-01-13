@@ -28,8 +28,6 @@
 NULL
 
 #' @import methods
-#' @import httr
-#' @import xml2
 #' @import GenomicRanges
 #' @import Biostrings
 #' @import Structstrings

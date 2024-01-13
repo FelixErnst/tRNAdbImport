@@ -85,7 +85,7 @@ tRNAdb2GFF(input)
 
 \item{dbURL}{the URL of the tRNA db}
 
-\item{verbose}{whether to report verbose information from the httr calls}
+\item{verbose}{whether to report verbose information from the httr2 calls}
 
 \item{mtdbID}{a mtRNAdb ID}
 

@@ -1,6 +1,6 @@
 Package: tRNAdbImport
 Title: Importing from tRNAdb and mitotRNAdb as GRanges objects
-Version: 1.21.0
+Version: 1.21.1
 Date: 2020-10-24
 Authors@R: person("Felix G.M.", 
                   "Ernst", 
@@ -17,22 +17,22 @@ biocViews:
     Visualization,
     DataImport
 Depends:
-    R (>= 3.5),
+    R (>= 3.6),
     GenomicRanges,
     Modstrings,
     Structstrings,
     tRNA
 Imports:
     Biostrings,
-    BiocGenerics,
     stringr,
+    httr2,
     xml2,
     S4Vectors,
     methods,
-    httr,
     IRanges,
     utils
 Suggests:
+    BiocGenerics,
     knitr,
     rmarkdown,
     testthat,
@@ -47,5 +47,5 @@ Collate:
     'tRNAdbImport-open.R'
     'utils.R'
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 BugReports: https://github.com/FelixErnst/tRNAdbImport/issues

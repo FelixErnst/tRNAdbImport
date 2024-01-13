@@ -110,8 +110,8 @@ test_that("input failure and warning test:",{
   expect_error(
     tRNAdbImport:::.has_CCA_end("")
   )
-  expect_error(import.tRNAdb.id(tdbID = "tdbD0000078500"))
   expect_error(tRNAdbImport:::.checkValueValidity("a", c("b","c")),
                "'a' must be one of the following values: 'b', 'c'")
-  
+  httptest::skip_if_disconnected(url = "http://trna.bioinf.uni-leipzig.de/")
+  expect_error(import.tRNAdb.id(tdbID = "tdbD0000078500"))
 })

@@ -18,6 +18,7 @@ NULL
 #' @return opens a window in a default browser for tRNAdb entry selected
 #' 
 #' @importFrom utils browseURL
+#' @importFrom httr2 url_build url_parse
 #'
 #' @export
 #'
@@ -27,12 +28,18 @@ NULL
 #'   open_mtdbID("mtdbD00000907")
 #' }
 open_tdbID <- function(tdbID, dbURL = TRNA_DB_URL){
-  utils::browseURL(paste0(httr::modify_url(dbURL), "DataOutput/Result?ID=",
-                          tdbID))
+  utils::browseURL(
+    httr2::url_build(
+      httr2::url_parse(
+        paste0(dbURL, "DataOutput/Result?ID=",
+               tdbID))))
 }
 #' @rdname open_tdbID
 #' @export
 open_mtdbID <- function(mtdbID, dbURL = TRNA_DB_URL_MT){
-  utils::browseURL(paste0(httr::modify_url(dbURL), "DataOutput/Result?ID=",
-                          mtdbID))
+  utils::browseURL(
+    httr2::url_build(
+      httr2::url_parse(
+        paste0(dbURL, "DataOutput/Result?ID=",
+               mtdbID))))
 }

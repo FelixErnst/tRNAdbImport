@@ -29,6 +29,12 @@ Using `tRNAdbImport` the tRNAdb can be accessed as outlined on the website
 [`r tRNAdbImport::TRNA_DB_URL`](`r tRNAdbImport::TRNA_DB_URL`) and the results
 are returned as a `GRanges` object.
 
+## Status 2024
+The tRNAdb Server is currently not available. Some chunks of the code in this 
+vignette are currently not avilable.
+See [https://www.bioinf.uni-leipzig.de/services/webservices](https://www.bioinf.uni-leipzig.de/services/webservices)
+for more information.
+
 # Importing as `GRanges`
 
 ```{r, echo=FALSE}
@@ -45,11 +51,11 @@ library(tRNAdbImport)
 gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
                     aminoacids = c("Phe","Ala"))
 ```
-```{r}
+```{r eval=FALSE}
 # get a Phenylalanine tRNA from yeast
 gr <- import.tRNAdb.id(tdbID = gr[gr$tRNA_type == "Phe",][1L]$tRNAdb_ID)
 ```
-```{r}
+```{r eval=FALSE}
 # find the same tRNA via blast
 gr <- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)
 ```
@@ -59,7 +65,7 @@ gr <- import.tRNAdb.blast(blastSeq = gr$tRNA_seq)
 gr <- import.mttRNAdb(organism = "Bos taurus", 
                       aminoacids = "Ala")
 ```
-```{r}
+```{r eval=FALSE}
 # get one mitochrondrial tRNA in Bos taurus. 
 gr <- import.mttRNAdb.id(mtdbID = gr[1L]$tRNAdb_ID)
 ```
@@ -77,7 +83,7 @@ the `tRNA_seq` column. Because the RNA sequences can contain modified
 nucleotides, the `ModRNAStringSet` class is used instead of the `RNAStringSet` 
 class to store the sequences correctly with all information intact.
 
-```{r}
+```{r eval=FALSE}
 gr <- import.tRNAdb(organism = "Saccharomyces cerevisiae",
                     aminoacids = c("Phe","Ala"),
                     database = "RNA")
@@ -93,7 +99,7 @@ The information on the position and type of the modifications can also be
 converted into a tabular format using the `separate` function from the 
 `Modstrings` package.
 
-```{r}
+```{r eval=FALSE}
 separate(gr$tRNA_seq)
 ```
 
@@ -107,7 +113,7 @@ suppressPackageStartupMessages({
   library(rtracklayer)
 })
 ```
-```{r}
+```{r eval=FALSE}
 library(Biostrings)
 library(rtracklayer)
 # saving the tRAN sequences as fasta file
