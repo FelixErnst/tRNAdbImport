@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tRNAdbImport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.21.1</span>
       </span>
     </div>
 
@@ -46,8 +48,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/FelixErnst/tRNAdbImport/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/FelixErnst/tRNAdbImport/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -61,17 +63,18 @@
 
       
 
-      </header><script src="tRNAdbImport_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="tRNAdbImport_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="tRNAdbImport_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Importing from to tRNAdb and mitotRNAdb as <code>GRanges</code>
+      <h1 data-toc-skip>Importing from to tRNAdb and mitotRNAdb as
+<code>GRanges</code>
 </h1>
-                        <h4 class="author">Felix G.M. Ernst</h4>
+                        <h4 data-toc-skip class="author">Felix G.M.
+Ernst</h4>
             
-            <h4 class="date">2020-10-24</h4>
+            <h4 data-toc-skip class="date">2024-03-23</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/FelixErnst/tRNAdbImport/blob/master/vignettes/tRNAdbImport.Rmd"><code>vignettes/tRNAdbImport.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/FelixErnst/tRNAdbImport/blob/HEAD/vignettes/tRNAdbImport.Rmd" class="external-link"><code>vignettes/tRNAdbImport.Rmd</code></a></small>
       <div class="hidden name"><code>tRNAdbImport.Rmd</code></div>
 
     </div>
@@ -89,207 +92,190 @@ document.addEventListener("DOMContentLoaded", function() {
     if (links[i].hostname != window.location.hostname)
       links[i].target = '_blank';
 });
-</script><div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The tRNAdb and mttRNAdb <span class="citation">(Jühling et al. 2009)</span> is a compilation of tRNA sequences and tRNA genes. It is a follow up version of the database of Sprinzl et al.  <span class="citation">(Sprinzl and Vassilenko 2005)</span>.</p>
-<p>Using <code>tRNAdbImport</code> the tRNAdb can be accessed as outlined on the website <a href="http://trna.bioinf.uni-leipzig.de/">http://trna.bioinf.uni-leipzig.de/</a> and the results are returned as a <code>GRanges</code> object.</p>
+</script><div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>The tRNAdb and mttRNAdb <span class="citation">(Jühling et al.
+2009)</span> is a compilation of tRNA sequences and tRNA genes. It is a
+follow up version of the database of Sprinzl et al.  <span class="citation">(Sprinzl and Vassilenko 2005)</span>.</p>
+<p>Using <code>tRNAdbImport</code> the tRNAdb can be accessed as
+outlined on the website <a href="http://trna.bioinf.uni-leipzig.de/" class="external-link">http://trna.bioinf.uni-leipzig.de/</a>
+and the results are returned as a <code>GRanges</code> object.</p>
+<div class="section level3">
+<h3 id="status-2024">Status 2024<a class="anchor" aria-label="anchor" href="#status-2024"></a>
+</h3>
+<p>The tRNAdb Server is currently not available. Some chunks of the code
+in this vignette are currently not avilable. See <a href="https://www.bioinf.uni-leipzig.de/services/webservices" class="external-link">https://www.bioinf.uni-leipzig.de/services/webservices</a>
+for more information.</p>
 </div>
-<div id="importing-as-granges" class="section level1">
-<h1 class="hasAnchor">
-<a href="#importing-as-granges" class="anchor"></a>Importing as <code>GRanges</code>
-</h1>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tRNAdbImport</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># accessing tRNAdb</span>
-<span class="co"># tRNA from yeast for Alanine and Phenylalanine</span>
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb</a></span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"Saccharomyces cerevisiae"</span>,
-                    aminoacids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Phe"</span>,<span class="st">"Ala"</span><span class="op">)</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="co"># get a Phenylalanine tRNA from yeast</span>
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb.id</a></span><span class="op">(</span>tdbID <span class="op">=</span> <span class="va">gr</span><span class="op">[</span><span class="va">gr</span><span class="op">$</span><span class="va">tRNA_type</span> <span class="op">==</span> <span class="st">"Phe"</span>,<span class="op">]</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span><span class="op">$</span><span class="va">tRNAdb_ID</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># find the same tRNA via blast</span>
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb.blast</a></span><span class="op">(</span>blastSeq <span class="op">=</span> <span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># accessing mtRNAdb</span>
-<span class="co"># get the mitochrondrial tRNA for Alanine in Bos taurus</span>
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.mttRNAdb</a></span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"Bos taurus"</span>, 
-                      aminoacids <span class="op">=</span> <span class="st">"Ala"</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co"># get one mitochrondrial tRNA in Bos taurus. </span>
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.mttRNAdb.id</a></span><span class="op">(</span>mtdbID <span class="op">=</span> <span class="va">gr</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span><span class="op">$</span><span class="va">tRNAdb_ID</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co"># check that the result has the appropriate columns</span>
-<span class="fu"><a href="../reference/istRNAdbGRanges.html">istRNAdbGRanges</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></pre></div>
-<pre><code>## [1] TRUE</code></pre>
 </div>
-<div id="importing-as-granges-from-the-rna-database" class="section level1">
-<h1 class="hasAnchor">
-<a href="#importing-as-granges-from-the-rna-database" class="anchor"></a>Importing as <code>GRanges</code> from the RNA database</h1>
-<p>The tRNAdb offers two different sets of data, one containing DNA sequences and one containing RNA sequences. Depending on the database selected, <code>DNA</code> as default, the GRanges will contain a <code>DNAStringSet</code> or a <code>ModRNAStringSet</code> as the <code>tRNA_seq</code> column. Because the RNA sequences can contain modified nucleotides, the <code>ModRNAStringSet</code> class is used instead of the <code>RNAStringSet</code> class to store the sequences correctly with all information intact.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb</a></span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"Saccharomyces cerevisiae"</span>,
-                    aminoacids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Phe"</span>,<span class="st">"Ala"</span><span class="op">)</span>,
-                    database <span class="op">=</span> <span class="st">"RNA"</span><span class="op">)</span>
-<span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span></pre></div>
-<pre><code>##   A ModRNAStringSet instance of length 3
-##     width seq                                               names               
-## [1]    76 GGGCGUGUKGCGUAGDCGGDAGC...TPCGAUUCCGGACUCGUCCACCA tdbR00000012
-## [2]    76 GCGGAUUUALCUCAGDDGGGAGA...TPCG"UCCACAGAAUUCGCACCA tdbR00000083
-## [3]    76 GCGGACUUALCUCAGDDGGGAGA...TPCG"UCCACAGAGUUCGCACCA tdbR00000084</code></pre>
-<p>The special characters in the sequence might no exactly match the ones shown on the website, since they are sanitized internally to a unified dictionary defined in the <code>Modstrings</code> package. However, the type of modification encoded will remain the same (See the <code>Modstrings</code> package for more details).</p>
-<p>The information on the position and type of the modifications can also be converted into a tabular format using the <code>separate</code> function from the <code>Modstrings</code> package.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu">separate</span><span class="op">(</span><span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span><span class="op">)</span></pre></div>
-<pre><code>## GRanges object with 38 ranges and 1 metadata column:
-##            seqnames    ranges strand |         mod
-##               &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
-##    [1] tdbR00000012         9      + |         m1G
-##    [2] tdbR00000012        16      + |           D
-##    [3] tdbR00000012        20      + |           D
-##    [4] tdbR00000012        26      + |       m2,2G
-##    [5] tdbR00000012        34      + |           I
-##    ...          ...       ...    ... .         ...
-##   [34] tdbR00000084        46      + |         m7G
-##   [35] tdbR00000084        49      + |        f5Cm
-##   [36] tdbR00000084        54      + |         m5U
-##   [37] tdbR00000084        55      + |           Y
-##   [38] tdbR00000084        58      + |         m1A
-##   -------
-##   seqinfo: 3 sequences from an unspecified genome; no seqlengths</code></pre>
+<div class="section level2">
+<h2 id="importing-as-granges">Importing as <code>GRanges</code><a class="anchor" aria-label="anchor" href="#importing-as-granges"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">tRNAdbImport</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># accessing tRNAdb</span></span>
+<span><span class="co"># tRNA from yeast for Alanine and Phenylalanine</span></span>
+<span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb</a></span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"Saccharomyces cerevisiae"</span>,</span>
+<span>                    aminoacids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Phe"</span>,<span class="st">"Ala"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: tRNAdb Server seems to be not available.</span></span></code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get a Phenylalanine tRNA from yeast</span></span>
+<span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb.id</a></span><span class="op">(</span>tdbID <span class="op">=</span> <span class="va">gr</span><span class="op">[</span><span class="va">gr</span><span class="op">$</span><span class="va">tRNA_type</span> <span class="op">==</span> <span class="st">"Phe"</span>,<span class="op">]</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span><span class="op">$</span><span class="va">tRNAdb_ID</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># find the same tRNA via blast</span></span>
+<span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb.blast</a></span><span class="op">(</span>blastSeq <span class="op">=</span> <span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># accessing mtRNAdb</span></span>
+<span><span class="co"># get the mitochrondrial tRNA for Alanine in Bos taurus</span></span>
+<span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.mttRNAdb</a></span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"Bos taurus"</span>, </span>
+<span>                      aminoacids <span class="op">=</span> <span class="st">"Ala"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: tRNAdb Server seems to be not available.</span></span></code></pre>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get one mitochrondrial tRNA in Bos taurus. </span></span>
+<span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.mttRNAdb.id</a></span><span class="op">(</span>mtdbID <span class="op">=</span> <span class="va">gr</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span><span class="op">$</span><span class="va">tRNAdb_ID</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># check that the result has the appropriate columns</span></span>
+<span><span class="fu"><a href="../reference/istRNAdbGRanges.html">istRNAdbGRanges</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: Input GRanges object does not meet the requirements of the function. The following columns are expected:</span></span>
+<span><span class="co">## 'tRNA_length', 'tRNA_type', 'tRNA_anticodon', 'tRNA_seq', 'tRNA_str', 'tRNA_CCA.end', 'tRNAdb_ID', 'tRNAdb', 'tRNAdb_organism', 'tRNAdb_strain', 'tRNAdb_taxonomyID', 'tRNAdb_verified'.</span></span></code></pre>
+<pre><code><span><span class="co">## [1] FALSE</span></span></code></pre>
 </div>
-<div id="further-analysis" class="section level1">
-<h1 class="hasAnchor">
-<a href="#further-analysis" class="anchor"></a>Further analysis</h1>
+<div class="section level2">
+<h2 id="importing-as-granges-from-the-rna-database">Importing as <code>GRanges</code> from the RNA database<a class="anchor" aria-label="anchor" href="#importing-as-granges-from-the-rna-database"></a>
+</h2>
+<p>The tRNAdb offers two different sets of data, one containing DNA
+sequences and one containing RNA sequences. Depending on the database
+selected, <code>DNA</code> as default, the GRanges will contain a
+<code>DNAStringSet</code> or a <code>ModRNAStringSet</code> as the
+<code>tRNA_seq</code> column. Because the RNA sequences can contain
+modified nucleotides, the <code>ModRNAStringSet</code> class is used
+instead of the <code>RNAStringSet</code> class to store the sequences
+correctly with all information intact.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">import.tRNAdb</a></span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"Saccharomyces cerevisiae"</span>,</span>
+<span>                    aminoacids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Phe"</span>,<span class="st">"Ala"</span><span class="op">)</span>,</span>
+<span>                    database <span class="op">=</span> <span class="st">"RNA"</span><span class="op">)</span></span>
+<span><span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span></span></code></pre></div>
+<p>The special characters in the sequence might no exactly match the
+ones shown on the website, since they are sanitized internally to a
+unified dictionary defined in the <code>Modstrings</code> package.
+However, the type of modification encoded will remain the same (See the
+<code>Modstrings</code> package for more details).</p>
+<p>The information on the position and type of the modifications can
+also be converted into a tabular format using the <code>separate</code>
+function from the <code>Modstrings</code> package.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Modstrings/man/separate.html" class="external-link">separate</a></span><span class="op">(</span><span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="further-analysis">Further analysis<a class="anchor" aria-label="anchor" href="#further-analysis"></a>
+</h2>
 <p>The output can be saved or directly used for further analysis.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">Biostrings</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rtracklayer</span><span class="op">)</span>
-<span class="co"># saving the tRAN sequences as fasta file</span>
-<span class="fu"><a href="https://rdrr.io/pkg/Biostrings/man/XStringSet-io.html">writeXStringSet</a></span><span class="op">(</span><span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span>, filepath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># converting tRNAdb information to GFF compatible values</span>
-<span class="va">gff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">tRNAdb2GFF</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span>
-<span class="va">gff</span></pre></div>
-<pre><code>## GRanges object with 3 ranges and 20 metadata columns:
-##           seqnames    ranges strand |   source     type     score     phase
-##              &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;factor&gt; &lt;factor&gt; &lt;integer&gt; &lt;integer&gt;
-##   [1] tdbR00000012      1-76      * |   tRNAdb     tRNA      &lt;NA&gt;      &lt;NA&gt;
-##   [2] tdbR00000083      1-76      * |   tRNAdb     tRNA      &lt;NA&gt;      &lt;NA&gt;
-##   [3] tdbR00000084      1-76      * |   tRNAdb     tRNA      &lt;NA&gt;      &lt;NA&gt;
-##                 ID        no tRNA_length   tRNA_type tRNA_anticodon
-##        &lt;character&gt; &lt;integer&gt;   &lt;integer&gt; &lt;character&gt;    &lt;character&gt;
-##   [1] tdbR00000012         1          76         Ala            IGC
-##   [2] tdbR00000083         2          76         Phe            #AA
-##   [3] tdbR00000084         3          76         Phe            #AA
-##                                                                           tRNA_seq
-##                                                                        &lt;character&gt;
-##   [1] GGGCGUGUKGCGUAGDCGGDAGCGCRCUCCCUUIGCOPGGGAGAGGDCUCCGGTPCGAUUCCGGACUCGUCCACCA
-##   [2] GCGGAUUUALCUCAGDDGGGAGAGCRCCAGABU#AAYAP°UGGAG7UC°UGUGTPCG"UCCACAGAAUUCGCACCA
-##   [3] GCGGACUUALCUCAGDDGGGAGAGCRCCAGABU#AAYAP°UGGAG7UC°UGUGTPCG"UCCACAGAGUUCGCACCA
-##                                                                           tRNA_str
-##                                                                        &lt;character&gt;
-##   [1] &lt;&lt;&lt;&lt;&lt;.&lt;..&lt;&lt;&lt;&lt;........&gt;&gt;&gt;&gt;.&lt;&lt;&lt;&lt;&lt;.......&gt;&gt;&gt;&gt;&gt;.....&lt;&lt;&lt;&lt;&lt;.......&gt;&gt;&gt;&gt;&gt;&gt;.&gt;&gt;&gt;&gt;&gt;....
-##   [2] &lt;&lt;&lt;&lt;&lt;&lt;&lt;..&lt;&lt;&lt;&lt;........&gt;&gt;&gt;&gt;.&lt;&lt;&lt;&lt;&lt;.......&gt;&gt;&gt;&gt;&gt;.....&lt;&lt;&lt;&lt;&lt;.......&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;....
-##   [3] &lt;&lt;&lt;&lt;&lt;&lt;&lt;..&lt;&lt;&lt;&lt;........&gt;&gt;&gt;&gt;.&lt;&lt;&lt;&lt;&lt;.......&gt;&gt;&gt;&gt;&gt;.....&lt;&lt;&lt;&lt;&lt;.......&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;....
-##       tRNA_CCA.end      tRNAdb    tRNAdb_ID          tRNAdb_organism
-##          &lt;logical&gt; &lt;character&gt;  &lt;character&gt;              &lt;character&gt;
-##   [1]         TRUE         RNA tdbR00000012 Saccharomyces cerevisiae
-##   [2]         TRUE         RNA tdbR00000083 Saccharomyces cerevisiae
-##   [3]         TRUE         RNA tdbR00000084 Saccharomyces cerevisiae
-##       tRNAdb_strain tRNAdb_taxonomyID tRNAdb_verified
-##         &lt;character&gt;       &lt;character&gt;       &lt;logical&gt;
-##   [1]                            4932            TRUE
-##   [2]                            4932            TRUE
-##   [3]                            4932            TRUE
-##                                                            tRNAdb_reference
-##                                                             &lt;CharacterList&gt;
-##   [1]       J.R.PENSWICK, R.MARTIN, G.DIRHEIMER (1975) FEBS LETT. 50, 28-31
-##   [2] P.E.NIELSEN, V.LEICK (1982) BIOCHEM. BIOPHYS. RES. COMM. 106, 179-185
-##   [3] G.KEITH, G.DIRHEIMER (1987) BIOCHEM. BIOPHYS. RES. COMM. 142, 183-187
-##           tRNAdb_pmid
-##       &lt;CharacterList&gt;
-##   [1]                
-##   [2]                
-##   [3]                
-##   -------
-##   seqinfo: 3 sequences from an unspecified genome; no seqlengths</code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="co"># Saving the information as gff3 file</span>
-<span class="fu"><a href="https://rdrr.io/pkg/rtracklayer/man/GFFFile-class.html">export.gff3</a></span><span class="op">(</span><span class="va">gff</span>, con <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
-<p>Please have a look at the <code>tRNA</code> package for further analysis of the tRNA sequences.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biostrings" class="external-link">Biostrings</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">rtracklayer</span><span class="op">)</span></span>
+<span><span class="co"># saving the tRAN sequences as fasta file</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/Biostrings/man/XStringSet-io.html" class="external-link">writeXStringSet</a></span><span class="op">(</span><span class="va">gr</span><span class="op">$</span><span class="va">tRNA_seq</span>, filepath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># converting tRNAdb information to GFF compatible values</span></span>
+<span><span class="va">gff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.tRNAdb.html">tRNAdb2GFF</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span>
+<span><span class="va">gff</span></span>
+<span><span class="co"># Saving the information as gff3 file</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/rtracklayer/man/GFFFile-class.html" class="external-link">export.gff3</a></span><span class="op">(</span><span class="va">gff</span>, con <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Please have a look at the <code>tRNA</code> package for further
+analysis of the tRNA sequences.</p>
 </div>
-<div id="session-info" class="section level1">
-<h1 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session info</h1>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></pre></div>
-<pre><code>## R version 4.0.3 (2020-10-10)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 18.04.5 LTS
-## 
-## Matrix products: default
-## BLAS:   /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
-## LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.2.20.so
-## 
-## locale:
-##  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
-##  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
-##  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
-## [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
-## 
-## attached base packages:
-## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
-## [8] methods   base     
-## 
-## other attached packages:
-##  [1] rtracklayer_1.48.0   tRNAdbImport_1.7.3   tRNA_1.6.1          
-##  [4] Structstrings_1.4.1  Modstrings_1.4.1     Biostrings_2.56.0   
-##  [7] XVector_0.28.0       GenomicRanges_1.40.0 GenomeInfoDb_1.24.2 
-## [10] IRanges_2.22.2       S4Vectors_0.26.1     BiocGenerics_0.34.0 
-## [13] BiocStyle_2.16.1    
-## 
-## loaded via a namespace (and not attached):
-##  [1] SummarizedExperiment_1.18.2 xfun_0.18                  
-##  [3] lattice_0.20-41             colorspace_1.4-1           
-##  [5] vctrs_0.3.4                 htmltools_0.5.0            
-##  [7] yaml_2.2.1                  XML_3.99-0.5               
-##  [9] rlang_0.4.8                 pkgdown_1.6.1.9000         
-## [11] pillar_1.4.6                glue_1.4.2                 
-## [13] BiocParallel_1.22.0         matrixStats_0.57.0         
-## [15] GenomeInfoDbData_1.2.3      lifecycle_0.2.0            
-## [17] stringr_1.4.0               zlibbioc_1.34.0            
-## [19] munsell_0.5.0               gtable_0.3.0               
-## [21] ragg_0.4.0                  memoise_1.1.0              
-## [23] evaluate_0.14               Biobase_2.48.0             
-## [25] knitr_1.30                  curl_4.3                   
-## [27] backports_1.1.10            scales_1.1.1               
-## [29] BiocManager_1.30.10         DelayedArray_0.14.1        
-## [31] desc_1.2.0                  systemfonts_0.3.2          
-## [33] fs_1.5.0                    Rsamtools_2.4.0            
-## [35] textshaping_0.1.2           ggplot2_3.3.2              
-## [37] digest_0.6.26               stringi_1.5.3              
-## [39] bookdown_0.21               rprojroot_1.3-2            
-## [41] grid_4.0.3                  tools_4.0.3                
-## [43] bitops_1.0-6                magrittr_1.5               
-## [45] RCurl_1.98-1.2              tibble_3.0.4               
-## [47] crayon_1.3.4                pkgconfig_2.0.3            
-## [49] Matrix_1.2-18               ellipsis_0.3.1             
-## [51] xml2_1.3.2                  assertthat_0.2.1           
-## [53] rmarkdown_2.5               httr_1.4.2                 
-## [55] R6_2.4.1                    GenomicAlignments_1.24.0   
-## [57] compiler_4.0.3</code></pre>
+<div class="section level2">
+<h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## R Under development (unstable) (2024-03-20 r86162)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
+<span><span class="co">## Running under: Ubuntu 22.04.4 LTS</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## time zone: UTC</span></span>
+<span><span class="co">## tzcode source: system (glibc)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats4    stats     graphics  grDevices utils     datasets  methods  </span></span>
+<span><span class="co">## [8] base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">##  [1] rtracklayer_1.63.1   tRNAdbImport_1.21.1  tRNA_1.21.1         </span></span>
+<span><span class="co">##  [4] Structstrings_1.19.1 Modstrings_1.19.0    Biostrings_2.71.5   </span></span>
+<span><span class="co">##  [7] XVector_0.43.1       GenomicRanges_1.55.4 GenomeInfoDb_1.39.9 </span></span>
+<span><span class="co">## [10] IRanges_2.37.1       S4Vectors_0.41.5     BiocGenerics_0.49.1 </span></span>
+<span><span class="co">## [13] BiocStyle_2.31.0    </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##  [1] SummarizedExperiment_1.33.3 gtable_0.3.4               </span></span>
+<span><span class="co">##  [3] rjson_0.2.21                xfun_0.42                  </span></span>
+<span><span class="co">##  [5] bslib_0.6.2                 ggplot2_3.5.0              </span></span>
+<span><span class="co">##  [7] httr2_1.0.0                 lattice_0.22-6             </span></span>
+<span><span class="co">##  [9] Biobase_2.63.0              vctrs_0.6.5                </span></span>
+<span><span class="co">## [11] tools_4.4.0                 bitops_1.0-7               </span></span>
+<span><span class="co">## [13] generics_0.1.3              parallel_4.4.0             </span></span>
+<span><span class="co">## [15] curl_5.2.1                  tibble_3.2.1               </span></span>
+<span><span class="co">## [17] fansi_1.0.6                 pkgconfig_2.0.3            </span></span>
+<span><span class="co">## [19] Matrix_1.7-0                desc_1.4.3                 </span></span>
+<span><span class="co">## [21] lifecycle_1.0.4             GenomeInfoDbData_1.2.11    </span></span>
+<span><span class="co">## [23] compiler_4.4.0              stringr_1.5.1              </span></span>
+<span><span class="co">## [25] Rsamtools_2.19.4            textshaping_0.3.7          </span></span>
+<span><span class="co">## [27] munsell_0.5.0               codetools_0.2-19           </span></span>
+<span><span class="co">## [29] htmltools_0.5.7             sass_0.4.9                 </span></span>
+<span><span class="co">## [31] RCurl_1.98-1.14             yaml_2.3.8                 </span></span>
+<span><span class="co">## [33] pkgdown_2.0.7               pillar_1.9.0               </span></span>
+<span><span class="co">## [35] crayon_1.5.2                jquerylib_0.1.4            </span></span>
+<span><span class="co">## [37] BiocParallel_1.37.1         DelayedArray_0.29.9        </span></span>
+<span><span class="co">## [39] cachem_1.0.8                abind_1.4-5                </span></span>
+<span><span class="co">## [41] tidyselect_1.2.1            digest_0.6.35              </span></span>
+<span><span class="co">## [43] stringi_1.8.3               restfulr_0.0.15            </span></span>
+<span><span class="co">## [45] dplyr_1.1.4                 purrr_1.0.2                </span></span>
+<span><span class="co">## [47] bookdown_0.38               fastmap_1.1.1              </span></span>
+<span><span class="co">## [49] grid_4.4.0                  SparseArray_1.3.4          </span></span>
+<span><span class="co">## [51] colorspace_2.1-0            cli_3.6.2                  </span></span>
+<span><span class="co">## [53] magrittr_2.0.3              S4Arrays_1.3.6             </span></span>
+<span><span class="co">## [55] XML_3.99-0.16.1             utf8_1.2.4                 </span></span>
+<span><span class="co">## [57] scales_1.3.0                rappdirs_0.3.3             </span></span>
+<span><span class="co">## [59] httr_1.4.7                  rmarkdown_2.26             </span></span>
+<span><span class="co">## [61] matrixStats_1.2.0           ragg_1.3.0                 </span></span>
+<span><span class="co">## [63] memoise_2.0.1               evaluate_0.23              </span></span>
+<span><span class="co">## [65] knitr_1.45                  BiocIO_1.13.0              </span></span>
+<span><span class="co">## [67] rlang_1.1.3                 glue_1.7.0                 </span></span>
+<span><span class="co">## [69] BiocManager_1.30.22         xml2_1.3.6                 </span></span>
+<span><span class="co">## [71] jsonlite_1.8.8              R6_2.5.1                   </span></span>
+<span><span class="co">## [73] MatrixGenerics_1.15.0       GenomicAlignments_1.39.4   </span></span>
+<span><span class="co">## [75] systemfonts_1.0.6           fs_1.6.3                   </span></span>
+<span><span class="co">## [77] zlibbioc_1.49.3</span></span></code></pre>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
-<div id="refs" class="references">
-<div id="ref-Juehling-2009">
-<p>Jühling, Frank, Mario Mörl, Roland K. Hartmann, Mathias Sprinzl, Peter F. Stadler, and Joern Pütz. 2009. “TRNAdb 2009: Compilation of tRNA Sequences and tRNA Genes.” <em>Nucleic Acids Research</em> 37: D159–D162. <a href="https://doi.org/10.1093/nar/gkn772">https://doi.org/10.1093/nar/gkn772</a>.</p>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Juehling.2009" class="csl-entry">
+Jühling, Frank, Mario Mörl, Roland K. Hartmann, Mathias Sprinzl, Peter
+F. Stadler, and Joern Pütz. 2009. <span>“tRNAdb 2009: Compilation of
+tRNA Sequences and tRNA Genes.”</span> <em>Nucleic Acids Research</em>
+37 (suppl_1): D159–62. <a href="https://doi.org/10.1093/nar/gkn772" class="external-link">https://doi.org/10.1093/nar/gkn772</a>.
 </div>
-<div id="ref-Sprinzl-2005">
-<p>Sprinzl, Mathias, and Konstantin S. Vassilenko. 2005. “Compilation of tRNA Sequences and Sequences of tRNA Genes.” <em>Nucleic Acids Research</em> 33: D139–D140. <a href="https://doi.org/10.1093/nar/gki012">https://doi.org/10.1093/nar/gki012</a>.</p>
+<div id="ref-Sprinzl.2005" class="csl-entry">
+Sprinzl, Mathias, and Konstantin S. Vassilenko. 2005. <span>“Compilation
+of tRNA Sequences and Sequences of tRNA Genes.”</span> <em>Nucleic Acids
+Research</em> 33 (suppl_1): D139–40. <a href="https://doi.org/10.1093/nar/gki012" class="external-link">https://doi.org/10.1093/nar/gki012</a>.
 </div>
 </div>
 </div>
@@ -306,11 +292,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
       <footer><div class="copyright">
-  <p>Developed by Felix G.M. Ernst.</p>
+  <p></p>
+<p>Developed by Felix G.M. Ernst.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -318,6 +306,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   
 
+
+  
 
   </body>
 </html>
