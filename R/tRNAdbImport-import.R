@@ -3,12 +3,14 @@ NULL
 
 #' @name import.tRNAdb
 #' @aliases import.tRNAdb import.mttRNAdb import.tRNAdb.id import.mttRNAdb.id
-#' import.tRNAdb.blast import.mttRNAdb.blast tRNAdb2GFF
+#' import.tRNAdb.blast import.mttRNAdb.blast
 #' 
 #' @title Importing information from the tRNA db as GRanges object
 #' 
 #' @description
-#' title
+#' For importing information from tRNAdb multiple functions are available. They
+#' share a common syntax where possible. Specialized calls are available for 
+#' id search and blast search for either the tRNA DB or mttRNA DB.
 #'
 #' @param organism a organism name as a character string 
 #' @param strain a strain information as a character string
@@ -30,7 +32,6 @@ NULL
 #' @param origin one ore more of "plastid", "mitochondrial" or "allothers"
 #' @param dbURL the URL of the tRNA db
 #' @param verbose whether to report verbose information from the httr2 calls
-#' @param input a GRanges object which passes the \code{istRNAdbGRanges} check
 #'
 #' @return a GRanges object containing the information from the tRNA db
 #' 
@@ -58,6 +59,27 @@ TRNA_DB_URL <- "http://trna.bioinf.uni-leipzig.de/"
 #' @export
 TRNA_DB_URL_MT <- "http://mttrna.bioinf.uni-leipzig.de/mt"
 
+
+# constants --------------------------------------------------------------------
+
+TRNA_DB_VERIFIED <- c("verified sequence" = TRUE,
+                      "unverified sequence" = FALSE,
+                      "not verifiable sequence" = NA)
+TRNA_DB_TYPE <- c("RNA","DNA")
+TRNA_DB_ORIGIN <- c("plastid" = "chloro",
+                    "mitochondrial" = "mito",
+                    "allothers" = "allothers")
+TRNADB_FEATURES <- c(
+  tRNA:::TRNA_FEATURES,
+  "tRNAdb_ID",
+  "tRNAdb",
+  "tRNAdb_organism",
+  "tRNAdb_strain",
+  "tRNAdb_taxonomyID",
+  "tRNAdb_verified"
+)
+
+# ------------------------------------------------------------------------------
 
 .assemble_args_for_tRNA_db_search <- 
 function(organism, strain, taxonomyID, aminoacids, anticodons, sequences,
@@ -292,20 +314,6 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
 
 # extracting information from search list --------------------------------------
 
-
-.handle_trna_db_connection_error <- function(res){
-  
-  
-}
-
-.get_verbose <- function(verbose){
-  if(verbose){
-    2L
-  } else {
-    0L
-  }
-}
-
 #' @importFrom httr2 request req_method req_body_form req_error req_perform 
 #'    url_build
 .get_trna_db <- function(url, body = list(), verbose){
@@ -314,7 +322,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   req <- do.call(httr2::req_body_form, c(list(req),body))
   req <- httr2::req_error(req)
   res <- try(do.call(httr2::req_perform, 
-                     list(req, verbosity = .get_verbose(verbose))), 
+                     list(req, verbosity = .get_verbosity(verbose))), 
              silent = TRUE)
   if(is(res,"try-error")){
     if(verbose){
@@ -548,105 +556,7 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
   ans
 }
 
-# formating sequences ----------------------------------------------------------
-
-.pos_letters <- function(x,chrs){
-  lapply(chrs,
-         function(chr){
-           stringr::str_locate_all(x, chr)
-         })
-}
-.sanitize_structures <- function(ids,str){
-  open <- .pos_letters(str,Structstrings::STRUCTURE_OPEN_CHR)
-  close <- .pos_letters(str,Structstrings::STRUCTURE_CLOSE_CHR)
-  lengthOpen <- lapply(open,function(z){lengths(z)})
-  lengthClose <- lapply(close,function(z){lengths(z)})
-  lengthMatch <- lapply(
-    seq_along(lengthOpen),
-    function(i){
-      which(unlist(lengthOpen[[i]]) != unlist(lengthClose[[i]]))
-    })
-  f <- unique(unlist(lengthMatch))
-  if(length(f) > 0L){
-    warning("Result from the tRNAdb contain invalid dot bracket annotation.\n",
-            "The following tRNAdb ids contain the invalid structure ",
-            "information: '",
-            paste(ids[f],
-                  collapse = "', '"),
-            "'")
-    strLengths <- unlist(lapply(str[f], width))
-    newStr <- unlist(lapply(strLengths,
-                            function(len){
-                              paste(rep(".",len),collapse = "")
-                            }))
-    str[f] <- newStr
-  }
-  # this checks for validity
-  str <- Structstrings::DotBracketStringSet(str)
-}
-.sanitize_sequences <- function(df){
-  seqs <- df$tRNA_seq
-  f_dna <- which(df$tRNAdb == "DNA")
-  f_rna <- which(df$tRNAdb == "RNA" | df$tRNAdb == "MT")
-  seq_dna <- seqs[f_dna]
-  seq_rna <- seqs[f_rna]
-  if(length(seq_dna) > 0){
-    seq_dna <- Biostrings::DNAStringSet(seq_dna)
-  } else {
-    seq_dna <- NULL
-  }
-  if(length(seq_rna) > 0){
-    seq_rna <- Modstrings::sanitizeFromtRNAdb(seq_rna)
-    seq_rna <- gsub("_","",seq_rna) # removes the insertion character
-    seq_modrna <- Modstrings::ModRNAStringSet(seq_rna)
-    seq_rna <- as(seq_modrna,"RNAStringSet")
-    seq_dna_test <- as(seq_rna,"DNAStringSet")
-    # if the ModRNAstringSet is actually a DNAStringset
-    if(all(as.character(seq_dna_test) == as.character(seq_modrna))){
-      seq_rna <- seq_dna_test
-    } else {
-      # if the ModRNAstringSet does contain modifications keep the ModRNAStringSet
-      if(!all(as.character(seq_rna) == as.character(seq_modrna))){
-        seq_rna <- seq_modrna
-      }
-    }
-    rm(seq_dna_test)
-    rm(seq_modrna)
-  } else {
-    seq_rna <- NULL
-  }
-  if(is(seq_rna,"ModRNAStringSet") || is(seq_rna,"RNAStringSet")){
-    seq_dna <- as(seq_dna,"RNAStringSet")
-  }
-  if(is(seq_rna,"ModRNAStringSet")){
-    seq_dna <- as(seq_dna,"ModRNAStringSet")
-  }
-  if(!is.null(seq_dna) &
-     !is.null(seq_rna) &
-     class(seq_rna) != class(seq_dna)){
-    stop("Something went wrong.")
-  }
-  seqs <- list(seq_dna,seq_rna) 
-  seqs <- do.call(c,
-                  seqs[!vapply(seqs,is.null,logical(1))])
-  seqs <- seqs[c(f_dna,f_rna)]
-  df$tRNA_seq <- seqs
-  df
-}
-
-
 # extract trna db information --------------------------------------------------
-
-.has_CCA_end <- function(structures){
-  strList <- getBasePairing(structures)
-  vapply(strList,
-         function(str){
-           end <- max(str$pos)
-           # the last three nucleotides must be unpaired
-           all(str[str$pos %in% (end-2):end,]$forward == 0)
-         },
-         logical(1))
-}
 
 .extract_tRNAdb_sequences <- function(input,
                                         df){
@@ -721,48 +631,4 @@ import.mttRNAdb <- function(organism = "",  strain = "",  taxonomyID = "",
                    tRNA_str = str,
                    tRNA_CCA.end = cca)
   ans
-}
-
-# convert result to GFF format compatible result
-
-#' @rdname import.tRNAdb
-#' @export
-tRNAdb2GFF <- function(input) {
-  .check_trnadb_granges(input, TRNADB_FEATURES)
-  tRNAdb <- input
-  # patch GRanges object with necessary columns for gff3 comptability
-  S4Vectors::mcols(tRNAdb)$tRNA_seq <- 
-    as.character(S4Vectors::mcols(tRNAdb)$tRNA_seq)
-  S4Vectors::mcols(tRNAdb)$tRNA_str <- 
-    as.character(S4Vectors::mcols(tRNAdb)$tRNA_str)
-  S4Vectors::mcols(tRNAdb)$ID <- S4Vectors::mcols(tRNAdb)$tRNAdb_ID
-  S4Vectors::mcols(tRNAdb)$type <- "tRNA"
-  S4Vectors::mcols(tRNAdb)$type <- 
-    as.factor(S4Vectors::mcols(tRNAdb)$type)
-  S4Vectors::mcols(tRNAdb)$source <- "tRNAdb"
-  S4Vectors::mcols(tRNAdb)$source <- 
-    as.factor(S4Vectors::mcols(tRNAdb)$source)
-  S4Vectors::mcols(tRNAdb)$score <- NA
-  S4Vectors::mcols(tRNAdb)$score <- 
-    as.numeric(S4Vectors::mcols(tRNAdb)$score)
-  S4Vectors::mcols(tRNAdb)$phase <- NA
-  S4Vectors::mcols(tRNAdb)$phase <- 
-    as.integer(S4Vectors::mcols(tRNAdb)$phase)
-  S4Vectors::mcols(tRNAdb)$score <- 
-    as.integer(S4Vectors::mcols(tRNAdb)$phase)
-  # arrange columns in correct order
-  S4Vectors::mcols(tRNAdb) <- 
-    cbind(S4Vectors::mcols(tRNAdb)[,c("source",
-                                      "type",
-                                      "score",
-                                      "phase",
-                                      "ID")],
-          S4Vectors::mcols(tRNAdb)[,-which(colnames(
-            S4Vectors::mcols(tRNAdb)) %in% 
-              c("source",
-                "type",
-                "score",
-                "phase",
-                "ID"))])
-  return(tRNAdb)
 }

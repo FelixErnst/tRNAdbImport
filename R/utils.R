@@ -10,3 +10,7 @@
 .is_non_empty_string <- function(x){
   .is_non_empty_character(x) && length(x) == 1L
 }
+
+.is_a_single_number <- function(x){
+  length(x) == 1L && is.numeric(x) && !is.na(x)
+}

@@ -34,23 +34,3 @@ NULL
 #' @import Modstrings
 #' @import tRNA
 NULL
-
-# constants --------------------------------------------------------------------
-
-TRNA_DB_VERIFIED <- c("verified sequence" = TRUE,
-                      "unverified sequence" = FALSE,
-                      "not verifiable sequence" = NA)
-TRNA_DB_TYPE <- c("RNA","DNA")
-TRNA_DB_ORIGIN <- c("plastid" = "chloro",
-                    "mitochondrial" = "mito",
-                    "allothers" = "allothers")
-
-TRNADB_FEATURES <- c(
-  tRNA:::TRNA_FEATURES,
-  "tRNAdb_ID",
-  "tRNAdb",
-  "tRNAdb_organism",
-  "tRNAdb_strain",
-  "tRNAdb_taxonomyID",
-  "tRNAdb_verified"
-)
